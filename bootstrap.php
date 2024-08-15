@@ -4,7 +4,11 @@ define('ROOT_DIR', __DIR__);
 
 function megaAutoload($class): void
 {
-    $config = require_once ROOT_DIR . '/config/autoload.php';
+    static $config = [];
+    if (empty($config)) {
+        $config = require_once ROOT_DIR . '/config/autoload.php';
+    }
+
     $mapping = $config['mapping'];
 
     $parts = explode('\\', $class);
