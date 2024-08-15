@@ -1,0 +1,44 @@
+version: '3.8'
+services:
+  nginx:
+    image: nginx:latest
+    container_name: mega-nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./.dev/nginx/default.conf:/etc/nginx/nginx.conf:ro
+      - ./:/var/www/html
+    depends_on:
+      - php
+    networks:
+      - mega_api_network
+
+  php:
+    image: mega-api-php-fpm
+    container_name: mega-api-php-fpm
+    volumes:
+      - ./:/var/www/html
+    depends_on:
+      - mega-mysql-db
+    networks:
+      - mega_api_network
+
+  mega-mysql-db:
+    image: mysql:8.0.39-debian
+    container_name: mega-mysql-db
+    volumes:
+      - ./.dev/db_data:/var/lib/mysql
+      - ./.dev/database/initial-dump.sql:/docker-entrypoint-initdb.d/01-db.sql
+    environment:
+      MYSQL_ROOT_PASSWORD: root_p@ssword_rock4me!!
+      MYSQL_DATABASE: mega_api
+      MYSQL_USER: mega_api
+      MYSQL_PASSWORD: api_p@ssword_rock4me!!
+    ports:
+      - "3306:3306"
+    networks:
+      - mega_api_network
+
+networks:
+  mega_api_network:
+    driver: bridge
