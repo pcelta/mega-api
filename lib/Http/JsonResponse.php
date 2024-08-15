@@ -7,7 +7,8 @@ namespace Lib\Http;
 class JsonResponse extends Response
 {
     private string $defaultHeader = 'Content-Type: application/json';
-    protected array $data = [];
+
+    public function __construct(private array $data = []) {}
 
     public function send(): void
     {
