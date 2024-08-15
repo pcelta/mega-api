@@ -4,6 +4,7 @@ declare(strict_types = 1);
 
 namespace Lib\Http;
 
+use Lib\ServiceLocator;
 use PHPUnit\Util\Json;
 
 class Router
@@ -13,6 +14,7 @@ class Router
     private string $httpMethod;
     private Request $request;
 
+    public function __construct(private ServiceLocator $serviceLocator) {}
 
     public function init(): void
     {
@@ -46,7 +48,7 @@ class Router
 
     private function dispatchController(array $routeConfig): void
     {
-        $controller = new $routeConfig['controller']();
+        $controller = $this->serviceLocator->get($routeConfig['controller']);
         $response = $controller->{$routeConfig['action']}($this->request);
         $response->send();
     }
