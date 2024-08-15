@@ -8,9 +8,7 @@ use Mega\Repository\RoleRepository;
 
 class RoleService
 {
-    public function __construct(private RoleRepository $roleRepository)
-    {
-    }
+    public function __construct(private RoleRepository $roleRepository) {}
 
     public function getAll(): array
     {

@@ -6,11 +6,15 @@ namespace Mega\Controller;
 
 use Lib\Http\JsonResponse;
 use Lib\Http\Response;
+use Mega\Service\RoleService;
 
 class RoleController
 {
+    public function __construct(private RoleService $roleService) {}
+
     public function list(): Response
     {
-        return new JsonResponse();
+        $roles = $this->roleService->getAll();
+        return new JsonResponse($roles);
     }
 }
