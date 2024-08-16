@@ -1,12 +1,13 @@
 <?php
 
-use Lib\ServiceLocator;
+use Mega\Controller\AuthController;
 use Mega\Controller\RoleController;
-use Mega\Controller\UserController;
 use Mega\Repository\RoleRepository;
+use Mega\Repository\UserAccessRepository;
 use Mega\Repository\UserRepository;
+use Mega\Service\AuthService;
 use Mega\Service\RoleService;
-use Mega\Service\UserService;
+use Mega\Service\UserAccessService;
 
 return [
     PDO::class => [
@@ -28,7 +29,7 @@ return [
         }
     ],
 
-    //repositories
+    // repositories
     RoleRepository::class => [
         'name' => RoleRepository::class,
         'args' => [
@@ -41,6 +42,12 @@ return [
             PDO::class
         ]
     ],
+    UserAccessRepository::class => [
+        'name' => UserAccessRepository::class,
+        'args' => [
+            PDO::class
+        ]
+    ],
 
     // services
     RoleService::class => [
@@ -49,10 +56,16 @@ return [
             RoleRepository::class
         ]
     ],
-    UserService::class => [
-        'name' => UserService::class,
+    AuthService::class => [
+        'name' => AuthService::class,
         'args' => [
             UserRepository::class
+        ]
+    ],
+    UserAccessService::class => [
+        'name' => UserAccessService::class,
+        'args' => [
+            UserAccessRepository::class
         ]
     ],
 
@@ -63,10 +76,11 @@ return [
             RoleService::class
         ]
     ],
-    UserController::class => [
-        'name' => UserController::class,
+    AuthController::class => [
+        'name' => AuthController::class,
         'args' => [
-            UserService::class
+            AuthService::class,
+            UserAccessService::class,
         ]
     ],
 ];

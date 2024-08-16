@@ -1,5 +1,6 @@
 <?php
 
+use Mega\Controller\AuthController;
 use Mega\Controller\HealthCheckController;
 use Mega\Controller\RoleController;
 use Mega\Controller\UserController;
@@ -12,10 +13,17 @@ return [
         'action' => 'index',
     ],
     [
-        'route' => '/role',
+        'route' => '/auth',
+        'method' => 'POST',
+        'controller' => AuthController::class,
+        'action' => 'authenticate',
+    ],
+    [
+        'route' => '/role/:slug:',
         'method' => 'GET',
         'controller' => RoleController::class,
-        'action' => 'list',
+        'action' => 'listOne',
+        'param' => ':slug:',
     ],
     [
         'route' => '/user',

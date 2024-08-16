@@ -10,8 +10,9 @@ class Response
     protected int $statusCode = self::HTTP_STATUS_OK;
     protected array $headers = [];
 
-    public const HTTP_STATUS_NOT_FOUND = 404;
     public const HTTP_STATUS_OK = 200;
+    public const HTTP_STATUS_UNAUTHORIZED = 401;
+    public const HTTP_STATUS_NOT_FOUND = 404;
 
     public function send(): void
     {
