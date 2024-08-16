@@ -4,6 +4,8 @@ declare(strict_types = 1);
 
 namespace Lib;
 
+use Lib\ServiceLocator\ServiceNotFoundException;
+
 class ServiceLocator
 {
     protected static array $loadedServices = [];
@@ -13,6 +15,10 @@ class ServiceLocator
     {
         if (isset(self::$loadedServices[$name])) {
             return self::$loadedServices[$name];
+        }
+
+        if (!isset(self::$servicesDefinitions[$name])) {
+            throw new ServiceNotFoundException($name);
         }
 
         return $this->loadService(self::$servicesDefinitions[$name]);
@@ -44,6 +50,10 @@ class ServiceLocator
                 $args[] = $service;
 
                 continue;
+            }
+
+            if (!isset(self::$servicesDefinitions[$serviceName])) {
+                throw new ServiceNotFoundException($serviceName);
             }
 
             $service = $this->loadService(self::$servicesDefinitions[$serviceName]);

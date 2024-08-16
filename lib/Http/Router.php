@@ -21,7 +21,7 @@ class Router
         $this->httpMethod = $_SERVER['REQUEST_METHOD'];
         $uriWithQueryString = $_SERVER['REQUEST_URI'];
         $this->uri = explode('?', $uriWithQueryString)[0];
-        $this->request = new Request($_SERVER, $_GET, $_POST);
+        $this->request = new Request($_SERVER, $_REQUEST, $_GET, $_POST);
     }
 
 
