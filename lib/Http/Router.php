@@ -30,14 +30,45 @@ class Router
         $this->routes = $routes;
     }
 
-    public function dispatch(): void
+    public function findRoute(): array
     {
         foreach ($this->routes as $routeConfig) {
             if ($this->uri === $routeConfig['route'] && $this->httpMethod === $routeConfig['method']) {
-                $this->dispatchController($routeConfig);
-
-                return;
+                return $routeConfig;
             }
+
+            if (!isset($routeConfig['param'])) {
+                continue;
+            }
+
+            $pattern = str_replace($routeConfig['param'], '(.*[a-zA-Z])', $routeConfig['route']);
+            $pattern = sprintf('#^%s#', $pattern);
+            preg_match($pattern, $this->uri, $matches);
+            if (count($matches) === 0) {
+                continue;
+            }
+
+            if ($this->httpMethod !== $routeConfig['method']) {
+                continue;
+            }
+
+            $routeConfig['uriParams'] = [
+                $routeConfig['param'] => $matches[1],
+            ];
+
+            return $routeConfig;
+        }
+
+        return [];
+    }
+
+    public function dispatch(): void
+    {
+        $routeConfig = $this->findRoute();
+        if ($routeConfig) {
+            $this->dispatchController($routeConfig);
+
+            return;
         }
 
         $notFoundResponse = new JsonResponse();
@@ -48,6 +79,12 @@ class Router
 
     private function dispatchController(array $routeConfig): void
     {
+        if (isset($routeConfig['uriParams'])) {
+            foreach ($routeConfig['uriParams'] as $paramName => $paramValue) {
+                $this->request->setCustomParam($paramName, $paramValue);
+            }
+        }
+
         $controller = $this->serviceLocator->get($routeConfig['controller']);
         $response = $controller->{$routeConfig['action']}($this->request);
         $response->send();
