@@ -1,0 +1,25 @@
+{
+    "name": "mega/api",
+    "type": "project",
+    "license": "MIT",
+    "description": "An API to receive large files",
+    "minimum-stability": "stable",
+    "prefer-stable": true,
+    "require": {
+        "php": ">=8.2"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "Mega\\": "src/",
+            "Lib\\": "lib/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "MegaTests\\": "tests/"
+        }
+    }
+}

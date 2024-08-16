@@ -1,1 +1,3 @@
 .dev/db_data
+.phpunit.result.cache
+vendor/*
