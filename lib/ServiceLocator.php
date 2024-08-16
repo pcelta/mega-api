@@ -36,7 +36,7 @@ class ServiceLocator
 
     private function loadService(array $serviceDefinition)
     {
-        if (!isset($serviceDefinition['args'])) {
+        if (isset($serviceDefinition['factory'])) {
             $service = $serviceDefinition['factory']();
             ServiceLocator::set($serviceDefinition['name'], $service);
 
@@ -62,7 +62,7 @@ class ServiceLocator
         }
 
         $service = new $serviceDefinition['name'](...$args);
-        ServiceLocator::set($serviceName, $service);
+        ServiceLocator::set($serviceDefinition['name'], $service);
 
         return $service;
     }
