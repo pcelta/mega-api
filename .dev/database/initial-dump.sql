@@ -43,3 +43,7 @@ CREATE TABLE IF NOT EXISTS user_access (
 
 INSERT INTO `role` (`id`, uid, `name`, description) VALUES (1, '550e8400-e29b-41d4-a716-446655440000', 'user', 'User role with access to the regular funcionalities for authenticated users');
 INSERT INTO `role` (`id`, uid, `name`, description) VALUES (2, '550e8400-e29b-41d4-a716-446655440001', 'admin', 'Administrator role with full access to the system');
+
+--                                                                                                       for the test purpose  'pass123@456!'
+INSERT INTO `user`(`id`, `uid`, `username`, `password`) VALUES (1, '550e8400-e29b-41d4-a716-446655440011', 'admin@mega.co.nz', '$2y$10$UHlXLfEgM/axM6kH5FN4P.GlKPKJZii/XJBBfvnYR7ljNFxOP112y');
+INSERT INTO `user_role`(`id`, `fk_user`, `fk_role`) VALUES (1, 1, 2);
