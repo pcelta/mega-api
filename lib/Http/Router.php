@@ -41,7 +41,7 @@ class Router
                 continue;
             }
 
-            $pattern = str_replace($routeConfig['param'], '(.*[a-zA-Z])', $routeConfig['route']);
+            $pattern = str_replace($routeConfig['param'], '(.*)', $routeConfig['route']);
             $pattern = sprintf('#^%s#', $pattern);
             preg_match($pattern, $this->uri, $matches);
             if (count($matches) === 0) {
