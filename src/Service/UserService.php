@@ -8,11 +8,12 @@ use DateTime;
 use Lib\Uid;
 use Mega\Entity\User;
 use Mega\Exception\UsernameAlreadyInUseException;
+use Mega\Repository\RoleRepository;
 use Mega\Repository\UserRepository;
 
 class UserService
 {
-    public function __construct(protected UserRepository $userRepository) {}
+    public function __construct(protected UserRepository $userRepository, protected RoleRepository $roleRepository) {}
 
     public function createFromPostData(array $data): User
     {
@@ -37,5 +38,30 @@ class UserService
     public function getOneByUid(string $userUid): User
     {
         return $this->userRepository->findOneByUid($userUid);
+    }
+
+    public function update(User $user, array $data): User
+    {
+        $updatedUser = $user;
+        if (!empty($data['password'])) {
+            $user->setPassword(password_hash($data['password'], PASSWORD_DEFAULT));
+        }
+
+        if (!isset($data['roles'])) {
+            return $updatedUser;
+        }
+
+        $roleUids = [];
+        foreach ($data['roles'] as $role) {
+            $roleUids[] = $role['uid'];
+        }
+
+        $roles = $this->roleRepository->findManyByUids($roleUids);
+        $updatedUser->setRoles($roles);
+
+        $this->userRepository->update($user);
+        $updatedUser = $this->userRepository->findOneByUid($user->getUid());
+
+        return $updatedUser;
     }
 }

@@ -17,6 +17,10 @@ class SchemaValidator
     {
         foreach ($schema as $fieldSchema) {
             if (!isset($data[$fieldSchema['field_name']])) {
+                if (($fieldSchema['optional'] ?? false) === true) {
+                    continue;
+                }
+
                 $this->errors[] = sprintf('Field: [%s] missing', $prefix . $fieldSchema['field_name']);
 
                 continue;

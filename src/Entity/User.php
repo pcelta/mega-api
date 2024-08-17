@@ -8,6 +8,9 @@ use DateTime;
 
 class User extends AbstractEntity
 {
+    public const PASSWORD_CLEAN_STATE = 'clean-password-for-security-reasons';
+    protected array $roles = [];
+
     public function __construct(
         protected ?int $id,
         protected string $uid,
@@ -41,6 +44,32 @@ class User extends AbstractEntity
             'username' => $this->username,
         ];
 
+        if ($this->getRoles()) {
+            foreach ($this->getRoles() as $role) {
+                $data['roles'][] = $role->toArray();
+            }
+        }
+
         return array_merge(parent::toArray(), $data);
+    }
+
+
+    public function setPassword(string $password): self
+    {
+        $this->password = $password;
+
+        return $this;
+    }
+
+    public function setRoles(array $roles): self
+    {
+        $this->roles = $roles;
+
+        return $this;
+    }
+
+    public function getRoles(): array
+    {
+        return $this->roles;
     }
 }

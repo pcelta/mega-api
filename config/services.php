@@ -4,6 +4,8 @@ use Lib\SchemaValidator;
 use Mega\Controller\AuthController;
 use Mega\Controller\RoleController;
 use Mega\Controller\UserController;
+use Mega\Repository\EntityBuilder\RoleBuilder;
+use Mega\Repository\EntityBuilder\UserBuilder;
 use Mega\Repository\RoleRepository;
 use Mega\Repository\UserAccessRepository;
 use Mega\Repository\UserRepository;
@@ -32,17 +34,30 @@ return [
         }
     ],
 
+    // entity builders
+    RoleBuilder::class => [
+        'name' => RoleBuilder::class,
+        'args' => []
+    ],
+    UserBuilder::class => [
+        'name' => UserBuilder::class,
+        'args' => []
+    ],
+
     // repositories
     RoleRepository::class => [
         'name' => RoleRepository::class,
         'args' => [
-            PDO::class
+            PDO::class,
+            RoleBuilder::class
         ]
     ],
     UserRepository::class => [
         'name' => UserRepository::class,
         'args' => [
-            PDO::class
+            PDO::class,
+            UserBuilder::class,
+            RoleBuilder::class
         ]
     ],
     UserAccessRepository::class => [
@@ -75,7 +90,8 @@ return [
     UserService::class => [
         'name' => UserService::class,
         'args' => [
-            UserRepository::class
+            UserRepository::class,
+            RoleRepository::class
         ],
     ],
 

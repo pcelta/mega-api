@@ -43,13 +43,20 @@ return [
         'action' => 'listAll',
         'allowed' => [Role::ROLE_ADMIN],
     ],
-
     [
         'route' => '/user/:uid:',
         'param' => ':uid:',
         'method' => 'GET',
         'controller' => UserController::class,
         'action' => 'listOne',
+        'allowed' => [Role::ROLE_ADMIN],
+    ],
+    [
+        'route' => '/user/:uid:',
+        'param' => ':uid:',
+        'method' => 'PATCH',
+        'controller' => UserController::class,
+        'action' => 'patch',
         'allowed' => [Role::ROLE_ADMIN],
     ],
 ];

@@ -4,13 +4,18 @@ declare(strict_types = 1);
 
 namespace Mega\Repository;
 
-use DateTime;
 use Mega\Entity\User;
 use Mega\Exception\EntityNotFoundException;
+use Mega\Repository\EntityBuilder\RoleBuilder;
+use Mega\Repository\EntityBuilder\UserBuilder;
 use PDO;
 
 class UserRepository extends AbstractRepository
 {
+    public function __construct(protected PDO $pdo, protected UserBuilder $userBuilder, protected RoleBuilder $roleBuilder) {
+        parent::__construct($pdo);
+    }
+
     public function persist(User $user): void
     {
         $sql = 'INSERT INTO user(uid, username, `password`) VALUES (:uid, :username, :password)';
@@ -35,7 +40,9 @@ class UserRepository extends AbstractRepository
 
         $row = $stmt->fetch();
 
-        return $this->buildUserFromRow($row, false);
+        $row['password'] = User::PASSWORD_CLEAN_STATE;
+
+        return $this->userBuilder->buildFromRow($row);
     }
 
     public function usernameExists(string $username): bool
@@ -62,18 +69,7 @@ class UserRepository extends AbstractRepository
             throw new EntityNotFoundException(User::class);
         }
 
-        return $this->buildUserFromRow($row);
-    }
-
-    private function buildUserFromRow(array $row, bool $removeSensitiveData = true): User
-    {
-        $this->transformStringDateToDatetime($row);
-
-        if ($removeSensitiveData === true) {
-            $row['password'] = 'clean-password-for-security-reasons';
-        }
-
-        return new User((int) $row['id'], $row['uid'], $row['username'], $row['password'], $row['created_at'], $row['updated_at']);
+        return $this->userBuilder->buildFromRow($row);
     }
 
     public function findAll(): array
@@ -84,7 +80,7 @@ class UserRepository extends AbstractRepository
         $rows = $stmt->fetchAll();
         $users = [];
         foreach ($rows as $row) {
-            $users[] = $this->buildUserFromRow($row);
+            $users[] = $this->userBuilder->buildFromRow($row);
         }
 
         return $users;
@@ -92,15 +88,71 @@ class UserRepository extends AbstractRepository
 
     public function findOneByUid(string $uid): User
     {
-        $stmt = $this->pdo->prepare('SELECT * FROM user WHERE uid = :uid');
+        $sql = <<<'QUERY'
+            SELECT u.*, r.id as r__id, r.name as r__name, r.slug as r__slug, r.uid as r__uid, r.created_at as r__created_at, r.updated_at as r__updated_at FROM user u
+            LEFT JOIN user_role ur ON ur.fk_user=u.id
+            LEFT JOIN role r ON r.id=ur.fk_role WHERE u.uid = :uid
+QUERY;
+
+        $stmt = $this->pdo->prepare($sql);
         $stmt->bindParam(':uid', $uid);
         $stmt->execute();
 
-        $row = $stmt->fetch();
-        if (!$row) {
+        $rows = $stmt->fetchAll();
+        if (!$rows) {
             throw new EntityNotFoundException(User::class);
         }
 
-        return $this->buildUserFromRow($row);
+        $user = $this->userBuilder->buildFromRow($rows[0]);
+        $roles = [];
+        foreach ($rows as $row) {
+            $roles[] = $this->roleBuilder->buildFromRow($row, 'r__');
+        }
+        $user->setRoles($roles);
+
+        return $user;
+    }
+
+    public function update(User $user): void
+    {
+        $stmt = $this->pdo->prepare('UPDATE user SET `password` = :password WHERE uid = :uid');
+
+        $uid = $user->getUid();
+        $password = $user->getPassword();
+
+        $stmt->bindParam(':uid', $uid);
+        $stmt->bindParam(':password', $password);
+        $stmt->execute();
+
+        if (!$user->getRoles()) {
+            return;
+        }
+
+        $this->removeAllUserRoles($user);
+        $this->persistUserRoles($user);
+    }
+
+    private function removeAllUserRoles(User $user): void
+    {
+        $userId = $user->getId();
+        $stmt = $this->pdo->prepare('DELETE FROM user_role WHERE fk_user = :fk_user');
+        $stmt->bindParam(':fk_user', $userId);
+        $stmt->execute();
+    }
+
+    public function persistUserRoles(User $user): void
+    {
+        foreach ($user->getRoles() as $role) {
+            $sql = 'INSERT INTO user_role(fk_user, fk_role) VALUES (:fk_user, :fk_role)';
+            $stmt = $this->pdo->prepare($sql);
+
+            $userUid = $user->getId();
+            $roleId = $role->getId();
+
+            $stmt->bindParam(':fk_user', $userUid, PDO::PARAM_INT);
+            $stmt->bindParam(':fk_role', $roleId, PDO::PARAM_INT);
+
+            $stmt->execute();
+        }
     }
 }

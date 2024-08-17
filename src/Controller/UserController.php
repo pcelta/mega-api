@@ -92,4 +92,49 @@ class UserController
             return $response;
         }
     }
+
+    public function patch(Request $request): JsonResponse
+    {
+        $userUid = $request->getParam(':uid:');
+        $data = $request->getBody();
+        $schema = [
+            [
+                'field_name' => 'password',
+                'validation' => SchemaValidator::FIELD_TYPE_STRING,
+                'optional' => true,
+            ],
+            [
+                'field_name' => 'roles',
+                'validation' => SchemaValidator::FIELD_TYPE_LIST_OF_OBJECTS,
+                'optional' => true,
+                'schema' => [
+                    [
+                        'field_name' => 'uid',
+                        'validation' => SchemaValidator::FIELD_TYPE_STRING,
+                    ]
+                ]
+            ]
+        ];
+
+        if (!$this->schemaValidator->validate($schema, $data)) {
+            $errors = $this->schemaValidator->getErrors();
+            $response = new JsonResponse(['errors' => $errors]);
+            $response->setStatusCode(Response::HTTP_STATUS_UNPROCESSABLE_ENTITY);
+
+            return $response;
+        }
+
+        try {
+            $user = $this->userService->getOneByUid($userUid);
+        } catch (EntityNotFoundException $e) {
+            $response = new JsonResponse(['message' => 'Not Found']);
+            $response->setStatusCode(Response::HTTP_STATUS_NOT_FOUND);
+
+            return $response;
+        }
+
+        $this->userService->update($user, $data);
+
+        return new JsonResponse($user->toArray());
+    }
 }

@@ -18,6 +18,11 @@ class SchemaValidatorTest extends TestCase
                 'validation' => SchemaValidator::FIELD_TYPE_STRING,
             ],
             [
+                'field_name' => 'password',
+                'validation' => SchemaValidator::FIELD_TYPE_STRING,
+                'optional' => true,
+            ],
+            [
                 'field_name' => 'number',
                 'validation' => SchemaValidator::FIELD_TYPE_INT,
             ],

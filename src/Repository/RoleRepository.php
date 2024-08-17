@@ -8,10 +8,15 @@ use DateTime;
 use Mega\Entity\Role;
 use Mega\Entity\User;
 use Mega\Exception\EntityNotFoundException;
+use Mega\Repository\EntityBuilder\RoleBuilder;
 use PDO;
 
 class RoleRepository extends AbstractRepository
 {
+    public function __construct(protected PDO $pdo, protected RoleBuilder $roleBuilder) {
+        parent::__construct($pdo);
+    }
+
     public function findBySlug(string $slug): Role
     {
         $sql = 'SELECT * FROM role WHERE slug = :slug ';
@@ -25,7 +30,24 @@ class RoleRepository extends AbstractRepository
             throw new EntityNotFoundException(Role::class);
         }
 
-        return $this->buildRoleFromRow($row);
+        return $this->roleBuilder->buildFromRow($row);
+    }
+
+    public function findManyByUids(array $uids): array
+    {
+        $inUids = implode('\',\'', $uids);
+        $sql = "SELECT * FROM role WHERE uid IN ('$inUids') ";
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute();
+
+        $rows = $stmt->fetchAll();
+        $roles = [];
+        foreach ($rows as $row) {
+            $roles[] = $this->roleBuilder->buildFromRow($row);
+        }
+
+        return $roles;
     }
 
     public function findByUser(User $user): array
@@ -44,16 +66,9 @@ class RoleRepository extends AbstractRepository
         $rows = $stmt->fetchAll();
         $roles = [];
         foreach ($rows as $row) {
-            $roles[] = $this->buildRoleFromRow($row);
+            $roles[] = $this->roleBuilder->buildFromRow($row);
         }
 
         return $roles;
-    }
-
-    private function buildRoleFromRow(array $row): Role
-    {
-        $this->transformStringDateToDatetime($row);
-
-        return new Role((int) $row['id'], $row['uid'], $row['name'], $row['slug'], $row['created_at'], $row['updated_at']);
     }
 }
