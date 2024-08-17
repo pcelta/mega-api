@@ -89,4 +89,18 @@ class UserRepository extends AbstractRepository
 
         return $users;
     }
+
+    public function findOneByUid(string $uid): User
+    {
+        $stmt = $this->pdo->prepare('SELECT * FROM user WHERE uid = :uid');
+        $stmt->bindParam(':uid', $uid);
+        $stmt->execute();
+
+        $row = $stmt->fetch();
+        if (!$row) {
+            throw new EntityNotFoundException(User::class);
+        }
+
+        return $this->buildUserFromRow($row);
+    }
 }

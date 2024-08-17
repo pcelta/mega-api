@@ -4,12 +4,14 @@ declare(strict_types = 1);
 
 namespace Mega\Controller;
 
+use Exception;
 use Lib\Attribute\ActionPermissionAttribute;
 use Lib\Http\JsonResponse;
 use Lib\Http\Request;
 use Lib\Http\Response;
 use Lib\SchemaValidator;
 use Mega\Entity\User;
+use Mega\Exception\EntityNotFoundException;
 use Mega\Exception\UsernameAlreadyInUseException;
 use Mega\Service\UserService;
 
@@ -73,5 +75,21 @@ class UserController
         }
 
         return new JsonResponse($responseData);
+    }
+
+    public function listOne(Request $request): JsonResponse
+    {
+        $userUid = $request->getParam(':uid:');
+
+        try {
+            $user = $this->userService->getOneByUid($userUid);
+
+            return new JsonResponse($user->toArray());
+        } catch (EntityNotFoundException $e) {
+            $response = new JsonResponse(['message' => 'Not Found']);
+            $response->setStatusCode(Response::HTTP_STATUS_NOT_FOUND);
+
+            return $response;
+        }
     }
 }
