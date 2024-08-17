@@ -17,8 +17,8 @@ class UserAccess extends AbstractEntity
         protected string $token,
         protected string $type,
         protected DateTime $expiresAt,
-        protected DateTime $createdAt,
-        protected DateTime $updatedAt
+        protected ?DateTime $createdAt,
+        protected ?DateTime $updatedAt
     ) {
         parent::__construct($id, $createdAt, $updatedAt);
     }

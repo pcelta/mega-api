@@ -17,8 +17,8 @@ class Role extends AbstractEntity
         protected string $uid,
         protected string $name,
         protected string $slug,
-        protected DateTime $createdAt,
-        protected DateTime $updatedAt
+        protected ?DateTime $createdAt,
+        protected ?DateTime $updatedAt
     ) {
         parent::__construct($id, $createdAt, $updatedAt);
     }

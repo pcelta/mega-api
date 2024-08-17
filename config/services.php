@@ -1,5 +1,6 @@
 <?php
 
+use Lib\SchemaValidator;
 use Mega\Controller\AuthController;
 use Mega\Controller\RoleController;
 use Mega\Controller\UserController;
@@ -9,6 +10,7 @@ use Mega\Repository\UserRepository;
 use Mega\Service\AuthService;
 use Mega\Service\RoleService;
 use Mega\Service\UserAccessService;
+use Mega\Service\UserService;
 
 return [
     PDO::class => [
@@ -70,6 +72,12 @@ return [
             UserAccessRepository::class
         ]
     ],
+    UserService::class => [
+        'name' => UserService::class,
+        'args' => [
+            UserRepository::class
+        ],
+    ],
 
     // controllers
     RoleController::class => [
@@ -87,6 +95,15 @@ return [
     ],
     UserController::class => [
         'name' => UserController::class,
+        'args' => [
+            SchemaValidator::class,
+            UserService::class,
+        ],
+    ],
+
+    // libs
+    SchemaValidator::class => [
+        'name' => SchemaValidator::class,
         'args' => [],
     ],
 ];

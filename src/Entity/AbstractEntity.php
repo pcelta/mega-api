@@ -8,11 +8,18 @@ use DateTime;
 
 abstract class AbstractEntity
 {
-    public function __construct(protected ?int $id, protected DateTime $createdAt, protected DateTime $updatedAt) {}
+    public function __construct(protected ?int $id, protected ?DateTime $createdAt, protected ?DateTime $updatedAt) {}
 
     public function getId(): int
     {
         return $this->id;
+    }
+
+    public function setId(int $id): self
+    {
+        $this->id = $id;
+
+        return $this;
     }
 
     public function getCreatedAt(): DateTime

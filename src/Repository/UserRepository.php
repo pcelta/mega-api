@@ -7,9 +7,26 @@ namespace Mega\Repository;
 use DateTime;
 use Mega\Entity\User;
 use Mega\Exception\EntityNotFoundException;
+use PDO;
 
 class UserRepository extends AbstractRepository
 {
+    public function persist(User $user): void
+    {
+        $sql = 'INSERT INTO user(uid, username, `password`) VALUES (:uid, :username, :password)';
+        $stmt = $this->pdo->prepare($sql);
+
+        $userUid = $user->getUid();
+        $username = $user->getUsername();
+        $password = $user->getPassword();
+
+        $stmt->bindParam(':uid', $userUid, PDO::PARAM_STR);
+        $stmt->bindParam(':username', $username, PDO::PARAM_STR);
+        $stmt->bindParam(':password', $password, PDO::PARAM_STR);
+
+        $stmt->execute();
+    }
+
     public function findByUsername(string $username): User
     {
         $stmt = $this->pdo->prepare('SELECT * FROM user WHERE username = :username');
@@ -19,6 +36,15 @@ class UserRepository extends AbstractRepository
         $row = $stmt->fetch();
 
         return $this->buildUserFromRow($row, false);
+    }
+
+    public function usernameExists(string $username): bool
+    {
+        $stmt = $this->pdo->prepare('SELECT * FROM user WHERE username = :username');
+        $stmt->bindParam(':username', $username);
+        $stmt->execute();
+
+        return $stmt->fetch() !== false;;
     }
 
     public function findByAccessToken(string $acessToken): User

@@ -11,9 +11,11 @@ class Response
     protected array $headers = [];
 
     public const HTTP_STATUS_OK = 200;
+    public const HTTP_STATUS_CREATED = 201;
     public const HTTP_STATUS_UNAUTHORIZED = 401;
     public const HTTP_STATUS_FORBIDDEN = 403;
     public const HTTP_STATUS_NOT_FOUND = 404;
+    public const HTTP_STATUS_UNPROCESSABLE_ENTITY = 422;
 
     public function send(): void
     {

@@ -6,12 +6,61 @@ namespace Mega\Controller;
 
 use Lib\Attribute\ActionPermissionAttribute;
 use Lib\Http\JsonResponse;
+use Lib\Http\Request;
+use Lib\Http\Response;
+use Lib\SchemaValidator;
+use Mega\Entity\User;
+use Mega\Exception\UsernameAlreadyInUseException;
+use Mega\Service\UserService;
 
 class UserController
 {
-    #[ActionPermissionAttribute(['admin'])]
-    public function create(): JsonResponse
+    public function __construct(protected SchemaValidator $schemaValidator, protected UserService $userService) {}
+
+    public function create(Request $request): JsonResponse
     {
-        return new JsonResponse(['message' => 'UserController::create action']);
+        $data = $request->getBody();
+        $schema = [
+            [
+                'field_name' => 'username',
+                'validation' => SchemaValidator::FIELD_TYPE_STRING,
+            ],
+            [
+                'field_name' => 'password',
+                'validation' => SchemaValidator::FIELD_TYPE_STRING,
+            ],
+            [
+                'field_name' => 'roles',
+                'validation' => SchemaValidator::FIELD_TYPE_LIST_OF_OBJECTS,
+                'schema' => [
+                    [
+                        'field_name' => 'uid',
+                        'validation' => SchemaValidator::FIELD_TYPE_STRING,
+                    ]
+                ]
+            ]
+        ];
+
+        if (!$this->schemaValidator->validate($schema, $data)) {
+            $errors = $this->schemaValidator->getErrors();
+            $response = new JsonResponse(['errors' => $errors]);
+            $response->setStatusCode(Response::HTTP_STATUS_UNPROCESSABLE_ENTITY);
+
+            return $response;
+        }
+
+        try {
+            $user = $this->userService->createFromPostData($data);
+
+            $response = new JsonResponse(['message' => 'User created!', 'user' => $user->toArray()]);
+            $response->setStatusCode(Response::HTTP_STATUS_CREATED);
+
+            return $response;
+        } catch (UsernameAlreadyInUseException $e) {
+            $response = new JsonResponse(['errors' => ['Username already in use']]);
+            $response->setStatusCode(Response::HTTP_STATUS_UNPROCESSABLE_ENTITY);
+
+            return $response;
+        }
     }
 }
