@@ -7,14 +7,25 @@ namespace Mega\Repository;
 use DateTime;
 use Mega\Entity\Role;
 use Mega\Entity\User;
+use Mega\Exception\EntityNotFoundException;
 use PDO;
 
 class RoleRepository extends AbstractRepository
 {
-    public function fetchAll(): array
+    public function findBySlug(string $slug): Role
     {
-        $stmt = $this->pdo->query('SELECT uid, name, description FROM role');
-        return $stmt->fetchAll();
+        $sql = 'SELECT * FROM role WHERE slug = :slug ';
+        $stmt = $this->pdo->prepare($sql);
+
+        $stmt->bindParam(':slug', $slug);
+        $stmt->execute();
+
+        $row = $stmt->fetch();
+        if (!$row) {
+            throw new EntityNotFoundException(Role::class);
+        }
+
+        return $this->buildRoleFromRow($row);
     }
 
     public function findByUser(User $user): array
@@ -33,13 +44,13 @@ class RoleRepository extends AbstractRepository
         $rows = $stmt->fetchAll();
         $roles = [];
         foreach ($rows as $row) {
-            $roles[] = $this->buildFromRow($row);
+            $roles[] = $this->buildRoleFromRow($row);
         }
 
         return $roles;
     }
 
-    private function buildFromRow(array $row): Role
+    private function buildRoleFromRow(array $row): Role
     {
         $this->transformStringDateToDatetime($row);
 

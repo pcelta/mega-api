@@ -27,7 +27,7 @@ return [
         'controller' => RoleController::class,
         'action' => 'listOne',
         'param' => ':slug:',
-        'allowed' => [Role::ROLE_ADMIN, Role::ROLE_USER],
+        'allowed' => [Role::ROLE_ADMIN],
     ],
     [
         'route' => '/user',

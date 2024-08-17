@@ -27,4 +27,15 @@ class Role extends AbstractEntity
     {
         return $this->slug;
     }
+
+    public function toArray(): array
+    {
+        $data = [
+            'uid' => $this->uid,
+            'name' => $this->name,
+            'slug' => $this->slug,
+        ];
+
+        return array_merge(parent::toArray(), $data);
+    }
 }

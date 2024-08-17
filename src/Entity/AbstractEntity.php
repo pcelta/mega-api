@@ -24,4 +24,12 @@ abstract class AbstractEntity
     {
         return $this->updatedAt;
     }
+
+    public function toArray(): array
+    {
+        return [
+            'created_at' => $this->createdAt->format('Y-m-dTH:i:s'),
+            'updated_at' => $this->updatedAt->format('Y-m-dTH:i:s'),
+        ];
+    }
 }
