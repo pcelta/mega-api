@@ -5,7 +5,7 @@ declare(strict_types = 1);
 namespace Lib\Http;
 
 use Lib\ServiceLocator;
-use PHPUnit\Util\Json;
+use Mega\Service\AuthService;
 
 class Router
 {
@@ -85,8 +85,25 @@ class Router
             }
         }
 
+        if (!$this->hasPermissionToAccess($routeConfig)) {
+            $notFoundResponse = new JsonResponse();
+            $notFoundResponse->setData(['message' => 'Access Denied']);;
+            $notFoundResponse->setStatusCode(Response::HTTP_STATUS_FORBIDDEN);
+            $notFoundResponse->send();
+
+            return;
+        }
+
         $controller = $this->serviceLocator->get($routeConfig['controller']);
         $response = $controller->{$routeConfig['action']}($this->request);
         $response->send();
+    }
+
+    protected function hasPermissionToAccess($routeConfig): bool
+    {
+        $userToken = str_replace('Bearer: ', '', $this->request->getAuthorizationHeader());
+        $authService = $this->serviceLocator->get(AuthService::class);
+
+        return $authService->accessTokenCanAccessRoute($userToken, $routeConfig);
     }
 }

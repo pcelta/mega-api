@@ -6,6 +6,7 @@ namespace Mega\Repository;
 
 use DateTime;
 use Mega\Entity\User;
+use Mega\Exception\EntityNotFoundException;
 
 class UserRepository extends AbstractRepository
 {
@@ -17,9 +18,35 @@ class UserRepository extends AbstractRepository
 
         $row = $stmt->fetch();
 
-        $createdAt = Datetime::createFromFormat('Y-m-d H:i:s', $row['created_at']);
-        $updatedAt = Datetime::createFromFormat('Y-m-d H:i:s', $row['updated_at']);
+        return $this->buildUserFromRow($row, false);
+    }
 
-        return new User((int) $row['id'], $row['uid'], $row['username'], $row['password'], $createdAt, $updatedAt);
+    public function findByAccessToken(string $acessToken): User
+    {
+        $sql = 'SELECT u.* FROM user u ';
+        $sql .= 'INNER JOIN user_access ua ON ua.fk_user=u.id ';
+        $sql .= 'WHERE token = :token AND `type` = "access" ';
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindParam(':token', $acessToken);
+        $stmt->execute();
+
+        $row = $stmt->fetch();
+        if (!$row) {
+            throw new EntityNotFoundException(User::class);
+        }
+
+        return $this->buildUserFromRow($row);
+    }
+
+    private function buildUserFromRow(array $row, bool $removeSensitiveData = true): User
+    {
+        $this->transformStringDateToDatetime($row);
+
+        if ($removeSensitiveData === true) {
+            $row['password'] = 'clean-password-for-security-reasons';
+        }
+
+        return new User((int) $row['id'], $row['uid'], $row['username'], $row['password'], $row['created_at'], $row['updated_at']);
     }
 }

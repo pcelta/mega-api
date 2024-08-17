@@ -45,4 +45,9 @@ class Request
     {
         $this->customParams[$name] = $value;
     }
+
+    public function getAuthorizationHeader(): string
+    {
+        return $this->server['HTTP_AUTHORIZATION'] ?? '';
+    }
 }

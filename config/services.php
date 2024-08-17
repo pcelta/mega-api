@@ -2,6 +2,7 @@
 
 use Mega\Controller\AuthController;
 use Mega\Controller\RoleController;
+use Mega\Controller\UserController;
 use Mega\Repository\RoleRepository;
 use Mega\Repository\UserAccessRepository;
 use Mega\Repository\UserRepository;
@@ -59,7 +60,8 @@ return [
     AuthService::class => [
         'name' => AuthService::class,
         'args' => [
-            UserRepository::class
+            UserRepository::class,
+            RoleRepository::class,
         ]
     ],
     UserAccessService::class => [
@@ -74,7 +76,7 @@ return [
         'name' => RoleController::class,
         'args' => [
             RoleService::class
-        ]
+        ],
     ],
     AuthController::class => [
         'name' => AuthController::class,
@@ -82,5 +84,9 @@ return [
             AuthService::class,
             UserAccessService::class,
         ]
+    ],
+    UserController::class => [
+        'name' => UserController::class,
+        'args' => [],
     ],
 ];

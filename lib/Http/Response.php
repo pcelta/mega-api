@@ -12,6 +12,7 @@ class Response
 
     public const HTTP_STATUS_OK = 200;
     public const HTTP_STATUS_UNAUTHORIZED = 401;
+    public const HTTP_STATUS_FORBIDDEN = 403;
     public const HTTP_STATUS_NOT_FOUND = 404;
 
     public function send(): void
