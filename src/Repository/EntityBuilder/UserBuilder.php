@@ -14,11 +14,12 @@ class UserBuilder extends AbstractEntityBuilder
         $row['uid'] = $row[$prefix . 'uid'];
         $row['username'] = $row[$prefix . 'username'];
         $row['password'] = $row[$prefix . 'password'];
+        $row['is_active'] = (bool) $row[$prefix . 'is_active'];
         $row['created_at'] = $row[$prefix . 'created_at'];
         $row['updated_at'] = $row[$prefix . 'updated_at'];
 
         $this->transformStringDateToDatetime($row);
 
-        return new User((int) $row['id'], $row['uid'], $row['username'], $row['password'], $row['created_at'], $row['updated_at']);
+        return new User((int) $row['id'], $row['uid'], $row['username'], $row['password'], $row['is_active'], $row['created_at'], $row['updated_at']);
     }
 }

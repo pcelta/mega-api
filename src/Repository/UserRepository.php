@@ -32,7 +32,7 @@ class UserRepository extends AbstractRepository
         $stmt->execute();
     }
 
-    public function findByUsername(string $username): User
+    public function findByUsername(string $username, bool $cleanPassword = true): User
     {
         $stmt = $this->pdo->prepare('SELECT * FROM user WHERE username = :username');
         $stmt->bindParam(':username', $username);
@@ -40,7 +40,10 @@ class UserRepository extends AbstractRepository
 
         $row = $stmt->fetch();
 
-        $row['password'] = User::PASSWORD_CLEAN_STATE;
+        if ($cleanPassword) {
+            $row['password'] = User::PASSWORD_CLEAN_STATE;
+        }
+
 
         return $this->userBuilder->buildFromRow($row);
     }
@@ -115,14 +118,15 @@ QUERY;
 
     public function update(User $user): void
     {
-        $stmt = $this->pdo->prepare('UPDATE user SET `password` = :password WHERE uid = :uid');
+        if ($user->getPassword() !== User::PASSWORD_CLEAN_STATE) {
+            $stmt = $this->pdo->prepare('UPDATE user SET `password` = :password WHERE uid = :uid');
+            $uid = $user->getUid();
+            $password = $user->getPassword();
 
-        $uid = $user->getUid();
-        $password = $user->getPassword();
-
-        $stmt->bindParam(':uid', $uid);
-        $stmt->bindParam(':password', $password);
-        $stmt->execute();
+            $stmt->bindParam(':uid', $uid);
+            $stmt->bindParam(':password', $password);
+            $stmt->execute();
+        }
 
         if (!$user->getRoles()) {
             return;
@@ -154,5 +158,13 @@ QUERY;
 
             $stmt->execute();
         }
+    }
+
+    public function disable(User $user): void
+    {
+        $userUid = $user->getUid();
+        $stmt = $this->pdo->prepare('UPDATE user SET `is_active` = 0 WHERE uid = :uid');
+        $stmt->bindParam(':uid', $userUid);
+        $stmt->execute();
     }
 }

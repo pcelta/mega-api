@@ -22,10 +22,20 @@ class UserService
         }
 
         $uid = Uid::generate();
-        $user = new User(null, $uid, $data['username'], password_hash($data['password'], PASSWORD_DEFAULT));
+        $user = new User(null, $uid, $data['username'], password_hash($data['password'], PASSWORD_DEFAULT), true);
         $this->userRepository->persist($user);
 
         $commitedUser = $this->userRepository->findByUsername($user->getUsername());
+
+        $roleUids = [];
+        foreach ($data['roles'] as $role) {
+            $roleUids[] = $role['uid'];
+        }
+
+        $roles = $this->roleRepository->findManyByUids($roleUids);
+        $commitedUser->setRoles($roles);
+
+        $this->userRepository->update($commitedUser);
 
         return $commitedUser;
     }
@@ -63,5 +73,10 @@ class UserService
         $updatedUser = $this->userRepository->findOneByUid($user->getUid());
 
         return $updatedUser;
+    }
+
+    public function disable(User $user): void
+    {
+        $this->userRepository->disable($user);
     }
 }

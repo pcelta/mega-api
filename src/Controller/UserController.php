@@ -137,4 +137,21 @@ class UserController
 
         return new JsonResponse($user->toArray());
     }
+
+    public function disable(Request $request): JsonResponse
+    {
+        $userUid = $request->getParam(':uid:');
+
+        try {
+            $user = $this->userService->getOneByUid($userUid);
+            $this->userService->disable($user);
+
+            return new JsonResponse(['message' => 'User has successfully been disabled']);
+        } catch (EntityNotFoundException $e) {
+            $response = new JsonResponse(['message' => 'Not Found']);
+            $response->setStatusCode(Response::HTTP_STATUS_NOT_FOUND);
+
+            return $response;
+        }
+    }
 }

@@ -18,7 +18,7 @@ class AuthService
 
     public function authenticate(UserIdentity $userIdentity): User
     {
-        $user = $this->userRepository->findByUsername($userIdentity->getUsername());
+        $user = $this->userRepository->findByUsername($userIdentity->getUsername(), false);
         if (!password_verify($userIdentity->getPassword(), $user->getPassword())) {
             throw new AuthenticationException();
         }

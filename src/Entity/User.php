@@ -16,6 +16,7 @@ class User extends AbstractEntity
         protected string $uid,
         protected string $username,
         protected string $password,
+        protected bool $isActive,
         protected ?DateTime $createAt = null,
         protected ?DateTime $updatedAt = null
     ) {
@@ -42,6 +43,7 @@ class User extends AbstractEntity
         $data = [
             'uid' => $this->uid,
             'username' => $this->username,
+            'is_active' => $this->isActive,
         ];
 
         if ($this->getRoles()) {

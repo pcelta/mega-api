@@ -59,4 +59,12 @@ return [
         'action' => 'patch',
         'allowed' => [Role::ROLE_ADMIN],
     ],
+    [
+        'route' => '/user/:uid:',
+        'param' => ':uid:',
+        'method' => 'DELETE',
+        'controller' => UserController::class,
+        'action' => 'disable',
+        'allowed' => [Role::ROLE_ADMIN],
+    ],
 ];
