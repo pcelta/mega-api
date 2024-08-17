@@ -63,4 +63,15 @@ class UserController
             return $response;
         }
     }
+
+    public function listAll(Request $request): JsonResponse
+    {
+        $users = $this->userService->getAll();
+        $responseData = [];
+        foreach ($users as $user) {
+            $responseData[] = $user->toArray();
+        }
+
+        return new JsonResponse($responseData);
+    }
 }

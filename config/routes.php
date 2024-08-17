@@ -36,4 +36,11 @@ return [
         'action' => 'create',
         'allowed' => [Role::ROLE_ADMIN],
     ],
+    [
+        'route' => '/user',
+        'method' => 'GET',
+        'controller' => UserController::class,
+        'action' => 'listAll',
+        'allowed' => [Role::ROLE_ADMIN],
+    ],
 ];

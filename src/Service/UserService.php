@@ -28,4 +28,9 @@ class UserService
 
         return $commitedUser;
     }
+
+    public function getAll(): array
+    {
+        return $this->userRepository->findAll();
+    }
 }

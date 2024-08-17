@@ -75,4 +75,18 @@ class UserRepository extends AbstractRepository
 
         return new User((int) $row['id'], $row['uid'], $row['username'], $row['password'], $row['created_at'], $row['updated_at']);
     }
+
+    public function findAll(): array
+    {
+        $stmt = $this->pdo->prepare('SELECT * FROM user');
+        $stmt->execute();
+
+        $rows = $stmt->fetchAll();
+        $users = [];
+        foreach ($rows as $row) {
+            $users[] = $this->buildUserFromRow($row);
+        }
+
+        return $users;
+    }
 }
