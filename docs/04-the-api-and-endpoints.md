@@ -1,0 +1,225 @@
+# Endpoints
+
+When the application is initiatialized It creates an administrator user with the following credentials:
+|  |  |
+|----------|----------|
+|   <b>Username</b>  |  admin@mega.co.nz  |
+|   <b>Password</b>  |   pass123@456!  |
+
+<br/>
+All endpoints that require either a User or Admin role to be accessed uses an a simple authentication mechanism via bearer token.
+<br/><br/>
+
+After hitting the POST /auth endpoint with valid credentials, an access and refresh tokens will be provided. Use the access token as bearer token
+<br/><br/>
+For example
+```
+Authorization: Bearer: 5cb280ed-097c-00e9-10f3-675d79395d6b
+```
+
+### Postman collection
+There is a Postman collection import file avaialable in docs/postman_collection.json.
+When the authentication is done using the Postman Collection, the access and refresh token are stored as environment variables. So, all the following requests that require a bearer token will automatically be added.
+
+
+## Authentication
+
+|  |  |
+|----------|----------|
+|   <b>URI</b>  |   /auth |
+|   <b>HTTP Method</b>  |   POST  |
+|   <b>Request body</b>  |     |
+
+```json
+{
+    "username": "admin@mega.co.nz",
+    "password": "pass123@456!"
+}
+```
+
+|  |  |
+|----------|----------|
+|   <b>Response</b>  |    |
+```json
+[
+    {
+        "token": "5cb280ed-097c-00e9-10f3-675d79395d6b",
+        "type": "access",
+        "expires_at": "2024-08-18UTC04:24:26",
+        "created_at": "2024-08-18UTC10:24:26"
+    },
+    {
+        "token": "2741ae10-040b-0bb2-34e1-856a5890c722",
+        "type": "refresh",
+        "expires_at": "2024-08-21UTC10:24:26",
+        "created_at": "2024-08-18UTC10:24:26"
+    }
+]
+```
+Once valid credentials are given the above response will be the result. Two tokens are available. The access token is to access resources, and the refresh token is to update the access token once is expired.
+<br/>
+<br/>
+Access tokens are valid for 24 hours
+Refresh tokens are valid for 5 days
+
+<br/>
+
+## Authentication | Refresh token
+Once the access token gets expired, a request should be done to this endpoint to get a new access token.
+
+|  |  |
+|----------|----------|
+|   <b>URI</b>  |   /auth/refresh-token |
+|   <b>HTTP Method</b>  |   POST  |
+
+In this case, the bearer token should contain the refresh token
+
+<br/>
+
+## List on Role by slug
+|  |  |
+|----------|----------|
+|   <b>URI</b>  |   /role/:role-slug |
+|   <b>HTTP Method</b>  |   POST  |
+|   <b>Request body</b>  |     |
+
+```json
+{
+    "username": "admin@mega.co.nz",
+    "password": "pass123@456!"
+}
+```
+
+|  |  |
+|----------|----------|
+|   <b>Response</b>  |    |
+```json
+[
+    {
+        "token": "5cb280ed-097c-00e9-10f3-675d79395d6b",
+        "type": "access",
+        "expires_at": "2024-08-18UTC04:24:26",
+        "created_at": "2024-08-18UTC10:24:26"
+    },
+    {
+        "token": "2741ae10-040b-0bb2-34e1-856a5890c722",
+        "type": "refresh",
+        "expires_at": "2024-08-21UTC10:24:26",
+        "created_at": "2024-08-18UTC10:24:26"
+    }
+]
+```
+
+## User | List all
+|  |  |
+|----------|----------|
+|   <b>URI</b>  |   /user |
+|   <b>HTTP Method</b>  |   GET  |
+|   <b>HTTP Response</b>  |     |
+
+```json
+[
+    {
+        "created_at": "2024-08-17UTC18:57:39",
+        "updated_at": "2024-08-17UTC18:57:39",
+        "uid": "550e8400-e29b-41d4-a716-446655440011",
+        "username": "admin@mega.co.nz",
+        "is_active": true
+    },
+    {
+        "created_at": "2024-08-17UTC19:24:57",
+        "updated_at": "2024-08-17UTC19:24:57",
+        "uid": "8bf2cca3-0183-013c-0de7-47c5c754662e",
+        "username": "regular@admin-mega.com",
+        "is_active": true
+    },
+    {
+        "created_at": "2024-08-17UTC19:27:59",
+        "updated_at": "2024-08-17UTC19:27:59",
+        "uid": "56e641d7-e9bd-03ef-3dc1-2d9150ebc48a",
+        "username": "regulara@admin-mega.com",
+        "is_active": true
+    }
+]
+```
+
+## User | List one by uid
+|  |  |
+|----------|----------|
+|   <b>URI</b>  |   /user/:uid: |
+|   <b>HTTP Method</b>  |   GET  |
+|   <b>HTTP Response</b>  |     |
+
+```json
+{
+    "created_at": "2024-08-17UTC18:57:39",
+    "updated_at": "2024-08-17UTC18:57:39",
+    "uid": "550e8400-e29b-41d4-a716-446655440011",
+    "username": "admin@mega.co.nz",
+    "is_active": true,
+    "roles": [
+        {
+            "created_at": "2024-08-17UTC18:57:39",
+            "updated_at": "2024-08-17UTC18:57:39",
+            "uid": "550e8400-e29b-41d4-a716-446655440001",
+            "name": "Admin",
+            "slug": "role-admin"
+        }
+    ]
+}
+```
+
+## User | Disable
+|  |  |
+|----------|----------|
+|   <b>URI</b>  |   /user/:uid: |
+|   <b>HTTP Method</b>  |   DELETE  |
+|   <b>HTTP Response</b>  |     |
+
+```json
+{
+    "message": "User has successfully been disabled"
+}
+```
+
+## User | Update
+|  |  |
+|----------|----------|
+|   <b>URI</b>  |   /user/:uid: |
+|   <b>HTTP Method</b>  |   PATCH  |
+|   <b>Limitation</b>  |   Does not update username  |
+|   <b>Request Body</b>  |     |
+
+```json
+{
+    "password": "12345678",
+    "roles": [
+        {
+            "uid": "550e8400-e29b-41d4-a716-446655440000"
+        }
+    ]
+}
+```
+
+|  |  |
+|----------|----------|
+|   <b>Response</b>  |    |
+```json
+{
+    "created_at": "2024-08-17UTC19:24:57",
+    "updated_at": "2024-08-17UTC19:24:57",
+    "uid": "8bf2cca3-0183-013c-0de7-47c5c754662e",
+    "username": "regular@admin-mega.com",
+    "is_active": true,
+    "roles": [
+        {
+            "created_at": "2024-08-17UTC18:57:39",
+            "updated_at": "2024-08-17UTC18:57:39",
+            "uid": "550e8400-e29b-41d4-a716-446655440000",
+            "name": "User",
+            "slug": "role-user"
+        }
+    ]
+}
+```
+
