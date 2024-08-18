@@ -33,8 +33,12 @@ class UserRepository extends AbstractRepository
         $stmt->execute();
     }
 
-    public function findByUsername(string $username, bool $cleanPassword = true): User
+    public function findByUsername(string $username, bool $cleanPassword = true, bool $mustBeActive = false): User
     {
+        $sql = 'SELECT * FROM user WHERE username = :username ';
+        if ($mustBeActive) {
+            $sql .= 'AND is_active = 1';
+        }
         $stmt = $this->pdo->prepare('SELECT * FROM user WHERE username = :username');
         $stmt->bindParam(':username', $username);
         $stmt->execute();
