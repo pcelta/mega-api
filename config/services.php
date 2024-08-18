@@ -98,7 +98,8 @@ return [
         'name' => UserService::class,
         'args' => [
             UserRepository::class,
-            RoleRepository::class
+            RoleRepository::class,
+            UserAccessRepository::class,
         ],
     ],
 

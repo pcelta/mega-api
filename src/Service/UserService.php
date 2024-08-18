@@ -9,11 +9,16 @@ use Lib\Uid;
 use Mega\Entity\User;
 use Mega\Exception\UsernameAlreadyInUseException;
 use Mega\Repository\RoleRepository;
+use Mega\Repository\UserAccessRepository;
 use Mega\Repository\UserRepository;
 
 class UserService
 {
-    public function __construct(protected UserRepository $userRepository, protected RoleRepository $roleRepository) {}
+    public function __construct(
+        protected UserRepository $userRepository,
+        protected RoleRepository $roleRepository,
+        protected UserAccessRepository $userAccessRepository
+    ) {}
 
     public function createFromPostData(array $data): User
     {
@@ -78,5 +83,6 @@ class UserService
     public function disable(User $user): void
     {
         $this->userRepository->disable($user);
+        $this->userAccessRepository->removeAllByUser($user);
     }
 }
