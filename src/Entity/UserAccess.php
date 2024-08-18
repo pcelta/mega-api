@@ -13,7 +13,7 @@ class UserAccess extends AbstractEntity
 
     public function __construct(
         protected ?int $id,
-        protected User $user,
+        protected ?User $user,
         protected string $token,
         protected string $type,
         protected DateTime $expiresAt,

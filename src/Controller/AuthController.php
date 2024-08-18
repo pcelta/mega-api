@@ -9,6 +9,8 @@ use Lib\Http\Request;
 use Lib\Http\Response;
 use Mega\Entity\UserIdentity;
 use Mega\Exception\AuthenticationException;
+use Mega\Exception\EntityNotFoundException;
+use Mega\Exception\InvalidRefreshTokenException;
 use Mega\Service\AuthService;
 use Mega\Service\UserAccessService;
 
@@ -37,5 +39,20 @@ class AuthController
         }
 
         return new JsonResponse($responseData);
+    }
+
+    public function refreshToken(Request $request): JsonResponse
+    {
+        $refreshToken = $request->getAuthorizationToken();
+        try {
+            $userAccess = $this->userAccessService->renewAccessTokenByRefreshToken($refreshToken);
+
+            return new JsonResponse($userAccess->toArray());
+        } catch (InvalidRefreshTokenException $e) {
+            $response = new JsonResponse(['message' => 'Invalid Refresh Token']);
+            $response->setStatusCode(Response::HTTP_STATUS_UNAUTHORIZED);
+
+            return $response;
+        }
     }
 }

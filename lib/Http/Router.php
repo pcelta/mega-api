@@ -101,7 +101,7 @@ class Router
 
     protected function hasPermissionToAccess($routeConfig): bool
     {
-        $userToken = str_replace('Bearer: ', '', $this->request->getAuthorizationHeader());
+        $userToken = $this->request->getAuthorizationToken();
         $authService = $this->serviceLocator->get(AuthService::class);
 
         return $authService->accessTokenCanAccessRoute($userToken, $routeConfig);

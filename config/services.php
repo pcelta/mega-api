@@ -5,6 +5,7 @@ use Mega\Controller\AuthController;
 use Mega\Controller\RoleController;
 use Mega\Controller\UserController;
 use Mega\Repository\EntityBuilder\RoleBuilder;
+use Mega\Repository\EntityBuilder\UserAccessBuilder;
 use Mega\Repository\EntityBuilder\UserBuilder;
 use Mega\Repository\RoleRepository;
 use Mega\Repository\UserAccessRepository;
@@ -43,6 +44,10 @@ return [
         'name' => UserBuilder::class,
         'args' => []
     ],
+    UserAccessBuilder::class => [
+        'name' => UserAccessBuilder::class,
+        'args' => [],
+    ],
 
     // repositories
     RoleRepository::class => [
@@ -63,7 +68,8 @@ return [
     UserAccessRepository::class => [
         'name' => UserAccessRepository::class,
         'args' => [
-            PDO::class
+            PDO::class,
+            UserAccessBuilder::class,
         ]
     ],
 
@@ -84,7 +90,8 @@ return [
     UserAccessService::class => [
         'name' => UserAccessService::class,
         'args' => [
-            UserAccessRepository::class
+            UserAccessRepository::class,
+            UserRepository::class,
         ]
     ],
     UserService::class => [

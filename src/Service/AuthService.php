@@ -33,7 +33,7 @@ class AuthService
         }
 
         try {
-            $user = $this->userRepository->findByAccessToken($accessToken);
+            $user = $this->userRepository->findByToken($accessToken, 'access');
         } catch (EntityNotFoundException $e) {
             return false;
         }

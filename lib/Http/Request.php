@@ -46,8 +46,10 @@ class Request
         $this->customParams[$name] = $value;
     }
 
-    public function getAuthorizationHeader(): string
+    public function getAuthorizationToken(): string
     {
-        return $this->server['HTTP_AUTHORIZATION'] ?? '';
+        $header = $this->server['HTTP_AUTHORIZATION'] ?? '';
+
+        return str_replace('Bearer: ', '', $header);
     }
 }

@@ -4,6 +4,7 @@ declare(strict_types = 1);
 
 namespace Mega\Repository;
 
+use DateTime;
 use Mega\Entity\User;
 use Mega\Exception\EntityNotFoundException;
 use Mega\Repository\EntityBuilder\RoleBuilder;
@@ -57,14 +58,15 @@ class UserRepository extends AbstractRepository
         return $stmt->fetch() !== false;;
     }
 
-    public function findByAccessToken(string $acessToken): User
+    public function findByToken(string $acessToken, string $type): User
     {
         $sql = 'SELECT u.* FROM user u ';
         $sql .= 'INNER JOIN user_access ua ON ua.fk_user=u.id ';
-        $sql .= 'WHERE token = :token AND `type` = "access" ';
+        $sql .= 'WHERE token = :token AND `type` = :type AND NOW() <= expires_at';
 
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindParam(':token', $acessToken);
+        $stmt->bindParam(':type', $type);
         $stmt->execute();
 
         $row = $stmt->fetch();

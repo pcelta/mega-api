@@ -22,6 +22,13 @@ return [
         'allowed' => [Role::ROLE_ANONYMOUS],
     ],
     [
+        'route' => '/auth/refresh-token',
+        'method' => 'POST',
+        'controller' => AuthController::class,
+        'action' => 'refreshToken',
+        'allowed' => [Role::ROLE_ANONYMOUS],
+    ],
+    [
         'route' => '/role/:slug:',
         'method' => 'GET',
         'controller' => RoleController::class,
