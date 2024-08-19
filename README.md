@@ -1,16 +1,19 @@
-# Welcome Mega API
+# Welcome Mega API by Pedro Ribeiro
 
 ## Foundation
-[Thing you should know before digging in](docs/01-foundation.md)
+[Things you should know to get started](docs/01-foundation.md)
 
 ## Architecture
-[Walk through on the architecture](docs/02-architecture.md)
+[Architecture walk through](docs/02-architecture.md)
 
 ## Data and Entity-Relationship Model
-[Walk through on the architecture](docs/03-data-and-models.md)
+[How the data is structured](docs/03-data-and-models.md)
 
 ## Setup
 [How to setup locally using Docker and Docker Compose](docs/04-setup.md)
 
 ## The API and the Endpoints
-[API information and available endpoints](docs/05-the-api-and-endpoints.md)
+[General API information and endpoints](docs/05-the-api-and-endpoints.md)
+
+## Possible next steps
+[Backlog with TODO items to improve the implementation](docs/06-backlog.md)
