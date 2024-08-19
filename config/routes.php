@@ -82,13 +82,20 @@ return [
         'action' => 'upload',
         'allowed' => [Role::ROLE_ADMIN, Role::ROLE_USER],
     ],
-
     [
         'route' => '/file/:uid:',
         'param' => ':uid:',
         'method' => 'GET',
         'controller' => FileController::class,
         'action' => 'listOne',
+        'allowed' => [Role::ROLE_ADMIN, Role::ROLE_USER],
+    ],
+    [
+        'route' => '/file/:uid:',
+        'param' => ':uid:',
+        'method' => 'DELETE',
+        'controller' => FileController::class,
+        'action' => 'delete',
         'allowed' => [Role::ROLE_ADMIN, Role::ROLE_USER],
     ],
 ];

@@ -15,7 +15,7 @@ use Mega\Service\FileService;
 
 class FileController extends AbstractController
 {
-    public function __construct(protected FileService $FileService) {}
+    public function __construct(protected FileService $fileService) {}
 
     public function upload(Request $request): JsonResponse
     {
@@ -36,7 +36,7 @@ class FileController extends AbstractController
         $fileName = $request->getParam('name');
 
         try {
-            $fileData = $this->FileService->store($fileName, $content, $mimeType, $fileSize, $this->authenticatedUsed);
+            $fileData = $this->fileService->store($fileName, $content, $mimeType, $fileSize, $this->authenticatedUsed);
 
             $response = new JsonResponse(['message' => 'File uploaded!', 'file' => $fileData->toArray()]);
             $response->setStatusCode(Response::HTTP_STATUS_CREATED);
@@ -53,12 +53,9 @@ class FileController extends AbstractController
     public function listOne(Request $request): Response
     {
         try {
-            $file = $this->FileService->getOneByUidAndUser($request->getParam(':uid:'), $this->authenticatedUsed);
+            $file = $this->fileService->getOneByUidAndUser($request->getParam(':uid:'), $this->authenticatedUsed);
         } catch (EntityNotFoundException $e) {
-            $response = new JsonResponse(['message' => 'Not Found']);
-            $response->setStatusCode(Response::HTTP_STATUS_NOT_FOUND);
-
-            return $response;
+            return JsonResponse::createNotFound();
         }
 
         if ($request->getParam('download', false)) {
@@ -66,5 +63,17 @@ class FileController extends AbstractController
         }
 
         return new JsonResponse($file->toArray());
+    }
+
+    public function delete(Request $request): JsonResponse
+    {
+        $fileUid = $request->getParam(':uid:');
+        try {
+            $this->fileService->deleteByUidAndUser($fileUid, $this->authenticatedUsed);
+
+            return new JsonResponse(['message' => 'File has been deleted!']);
+        } catch (EntityNotFoundException $e) {
+            return JsonResponse::createNotFound();
+        }
     }
 }

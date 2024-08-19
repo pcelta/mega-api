@@ -35,4 +35,10 @@ class FileService
     {
         return $this->fileRepository->findOneByUidAndUser($fileUid, $user);
     }
+
+    public function deleteByUidAndUser(string $uid, User $user): void
+    {
+        $file = $this->fileRepository->findOneByUidAndUser($uid, $user);
+        $this->fileRepository->delete($file);
+    }
 }

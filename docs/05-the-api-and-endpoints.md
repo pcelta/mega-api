@@ -306,3 +306,19 @@ In this case, the bearer token should contain the refresh token
     }
 }
 ```
+
+## File | Delete One
+|  |  |
+|----------|----------|
+|   <b>URI</b>  |   /file/:uid: |
+|   <b>HTTP Method</b>  |   DELETE  |
+
+
+|  |  |
+|----------|----------|
+|   <b>Response</b>  |    |
+```json
+{
+    "message": "File has been deleted!"
+}
+```

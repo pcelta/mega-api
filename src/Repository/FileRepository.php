@@ -61,4 +61,18 @@ class FileRepository extends AbstractRepository
 
         return $file;
     }
+
+    public function delete(File $file): void
+    {
+        $sql = 'DELETE FROM user_file_data WHERE uid = :uid AND fk_user = :user_id ';
+
+        $stmt = $this->pdo->prepare($sql);
+
+        $userId = $file->getUser()->getId();
+        $uid = $file->getUid();
+
+        $stmt->bindParam(':uid', $uid);
+        $stmt->bindParam(':user_id', $userId);
+        $stmt->execute();
+    }
 }
