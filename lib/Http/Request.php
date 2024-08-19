@@ -19,6 +19,11 @@ class Request
         return json_decode($this->body, true);
     }
 
+    public function getContent()
+    {
+        return $this->body;
+    }
+
     public function getParam(string $param, $default = null)
     {
         if (isset($this->getParams[$param])) {
@@ -51,5 +56,10 @@ class Request
         $header = $this->server['HTTP_AUTHORIZATION'] ?? '';
 
         return str_replace('Bearer: ', '', $header);
+    }
+
+    public function getContentType(): string
+    {
+        return $this->server['HTTP_CONTENT_TYPE'] ?? '';
     }
 }
