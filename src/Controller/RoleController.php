@@ -22,10 +22,7 @@ class RoleController extends AbstractController
 
             return new JsonResponse($role->toArray());
         } catch (EntityNotFoundException $e) {
-            $notFoundResponse = new JsonResponse(['message' => 'Not Found']);
-            $notFoundResponse->setStatusCode(Response::HTTP_STATUS_NOT_FOUND);
-
-            return $notFoundResponse;
+            return JsonResponse::createNotFound();
         }
     }
 }
