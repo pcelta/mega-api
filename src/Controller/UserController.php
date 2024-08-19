@@ -4,18 +4,15 @@ declare(strict_types = 1);
 
 namespace Mega\Controller;
 
-use Exception;
-use Lib\Attribute\ActionPermissionAttribute;
 use Lib\Http\JsonResponse;
 use Lib\Http\Request;
 use Lib\Http\Response;
 use Lib\SchemaValidator;
-use Mega\Entity\User;
 use Mega\Exception\EntityNotFoundException;
 use Mega\Exception\UsernameAlreadyInUseException;
 use Mega\Service\UserService;
 
-class UserController
+class UserController extends AbstractController
 {
     public function __construct(protected SchemaValidator $schemaValidator, protected UserService $userService) {}
 
