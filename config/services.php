@@ -3,6 +3,7 @@
 use Lib\SchemaValidator;
 use Mega\Controller\AuthController;
 use Mega\Controller\FileController;
+use Mega\Controller\HealthCheckController;
 use Mega\Controller\RoleController;
 use Mega\Controller\UserController;
 use Mega\Repository\EntityBuilder\FileBuilder;
@@ -126,6 +127,10 @@ return [
     ],
 
     // controllers
+    HealthCheckController::class => [
+        'name' => HealthCheckController::class,
+        'args' => [],
+    ],
     RoleController::class => [
         'name' => RoleController::class,
         'args' => [
