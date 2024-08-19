@@ -24,4 +24,12 @@ class JsonResponse extends Response
 
         return $this;
     }
+
+    public static function createNotFound(): self
+    {
+        $response = new JsonResponse(['message' => 'Not Found']);
+        $response->setStatusCode(Response::HTTP_STATUS_NOT_FOUND);
+
+        return $response;
+    }
 }
