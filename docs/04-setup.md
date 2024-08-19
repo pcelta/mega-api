@@ -71,3 +71,18 @@ Run the unit tests
 ```sh
 make phpunit
 ```
+
+### Optional
+There are some unit tests implemented for a few classes. If you would like to run them, follow the steps below
+
+Installing PHPUnit
+```sh
+make composer c=install
+```
+
+Running the unit tests using PHPUnit
+```sh
+make phpunit
+```
+The following output should be displayed
+![](phpunit-screenshot.png)
