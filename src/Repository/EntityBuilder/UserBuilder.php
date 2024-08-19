@@ -13,7 +13,9 @@ class UserBuilder extends AbstractEntityBuilder
         $row['id'] = $row[$prefix . 'id'];
         $row['uid'] = $row[$prefix . 'uid'];
         $row['username'] = $row[$prefix . 'username'];
-        $row['password'] = $row[$prefix . 'password'];
+
+        $row['password'] = $row[$prefix . 'password'] ?? User::PASSWORD_CLEAN_STATE;
+
         $row['is_active'] = (bool) $row[$prefix . 'is_active'];
         $row['created_at'] = $row[$prefix . 'created_at'];
         $row['updated_at'] = $row[$prefix . 'updated_at'];

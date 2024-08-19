@@ -10,7 +10,7 @@ use Lib\Http\Response;
 use Mega\Exception\EntityNotFoundException;
 use Mega\Service\RoleService;
 
-class RoleController
+class RoleController extends AbstractController
 {
     public function __construct(private RoleService $roleService) {}
 

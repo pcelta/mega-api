@@ -2,15 +2,19 @@
 
 use Lib\SchemaValidator;
 use Mega\Controller\AuthController;
+use Mega\Controller\FileController;
 use Mega\Controller\RoleController;
 use Mega\Controller\UserController;
+use Mega\Repository\EntityBuilder\FileBuilder;
 use Mega\Repository\EntityBuilder\RoleBuilder;
 use Mega\Repository\EntityBuilder\UserAccessBuilder;
 use Mega\Repository\EntityBuilder\UserBuilder;
+use Mega\Repository\FileRepository;
 use Mega\Repository\RoleRepository;
 use Mega\Repository\UserAccessRepository;
 use Mega\Repository\UserRepository;
 use Mega\Service\AuthService;
+use Mega\Service\FileService;
 use Mega\Service\RoleService;
 use Mega\Service\UserAccessService;
 use Mega\Service\UserService;
@@ -48,6 +52,10 @@ return [
         'name' => UserAccessBuilder::class,
         'args' => [],
     ],
+    FileBuilder::class => [
+        'name' => FileBuilder::class,
+        'args' => []
+    ],
 
     // repositories
     RoleRepository::class => [
@@ -70,6 +78,14 @@ return [
         'args' => [
             PDO::class,
             UserAccessBuilder::class,
+        ]
+    ],
+    FileRepository::class => [
+        'name' => FileRepository::class,
+        'args' => [
+            PDO::class,
+            FileBuilder::class,
+            UserBuilder::class,
         ]
     ],
 
@@ -102,6 +118,12 @@ return [
             UserAccessRepository::class,
         ],
     ],
+    FileService::class => [
+        'name' => FileService::class,
+        'args' => [
+            FileRepository::class,
+        ]
+    ],
 
     // controllers
     RoleController::class => [
@@ -122,6 +144,12 @@ return [
         'args' => [
             SchemaValidator::class,
             UserService::class,
+        ],
+    ],
+    FileController::class => [
+        'name' => FileController::class,
+        'args' => [
+            FileService::class,
         ],
     ],
 

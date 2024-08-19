@@ -43,6 +43,19 @@ CREATE TABLE IF NOT EXISTS user_access (
     FOREIGN KEY (fk_user) REFERENCES user(id)
 );
 
+CREATE TABLE IF NOT EXISTS user_file_data (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    uid CHAR(36) NOT NULL UNIQUE,
+    fk_user INT NOT NULL,
+    content_type VARCHAR(100) NOT NULL,
+    `name` VARCHAR(100) NOT NULL,
+    file_data BLOB NOT NULL,
+    size INT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (fk_user) REFERENCES user(id)
+);
+
 INSERT INTO `role` (`id`, uid, `name`, `slug`, description) VALUES (1, '550e8400-e29b-41d4-a716-446655440000', 'User', 'role-user', 'User role with access to the regular funcionalities for authenticated users');
 INSERT INTO `role` (`id`, uid, `name`, `slug`, description) VALUES (2, '550e8400-e29b-41d4-a716-446655440001', 'Admin', 'role-admin', 'Administrator role with full access to the system');
 

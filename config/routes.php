@@ -1,6 +1,7 @@
 <?php
 
 use Mega\Controller\AuthController;
+use Mega\Controller\FileController;
 use Mega\Controller\HealthCheckController;
 use Mega\Controller\RoleController;
 use Mega\Controller\UserController;
@@ -73,5 +74,21 @@ return [
         'controller' => UserController::class,
         'action' => 'disable',
         'allowed' => [Role::ROLE_ADMIN],
+    ],
+    [
+        'route' => '/file',
+        'method' => 'POST',
+        'controller' => FileController::class,
+        'action' => 'upload',
+        'allowed' => [Role::ROLE_ADMIN, Role::ROLE_USER],
+    ],
+
+    [
+        'route' => '/file/:uid:',
+        'param' => ':uid:',
+        'method' => 'GET',
+        'controller' => FileController::class,
+        'action' => 'listOne',
+        'allowed' => [Role::ROLE_ADMIN, Role::ROLE_USER],
     ],
 ];

@@ -223,3 +223,86 @@ In this case, the bearer token should contain the refresh token
 }
 ```
 
+## File | Upload
+|  |  |
+|----------|----------|
+|   <b>URI</b>  |   /file |
+|   <b>HTTP Method</b>  |   POST  |
+|   <b>Request Data type</b>  |   Multipart/Form-Data  |
+|   <b>Form</b>  |     |
+|   <b>form.file</b>  |  file to be uploaded   |
+|   <b>form.name</b>  |  file desired name   |
+
+|  |  |
+|----------|----------|
+|   <b>Response</b>  |    |
+```json
+{
+    "message": "File uploaded!",
+    "file_data": {
+        "created_at": "2024-08-19UTC09:19:37",
+        "updated_at": "2024-08-19UTC09:19:37",
+        "uid": "b75b819f-3978-014e-291c-841bfa1d2bfe",
+        "name": "my small image",
+        "size": 16491,
+        "contentType": "image/png",
+            "links": [
+        {
+            "type": "metadata",
+            "link": "/file/b75b819f-3978-014e-291c-841bfa1d2bfe"
+        },
+        {
+            "type": "download",
+            "link": "/file/b75b819f-3978-014e-291c-841bfa1d2bfe?download=true"
+        }
+    ],
+        "user": {
+            "created_at": "2024-08-19UTC09:14:00",
+            "updated_at": "2024-08-19UTC09:14:00",
+            "uid": "84f80a21-6aea-0e46-2041-f028cae765b1",
+            "username": "regular@admin-mega.com",
+            "is_active": true
+        }
+    }
+}
+```
+
+## File | Fetch One
+|  |  |
+|----------|----------|
+|   <b>URI</b>  |   /file/:uid: |
+|   <b>HTTP Method</b>  |   GET  |
+|   <b>Query String Parameters</b>  |     |
+|   <b>download</b>  |   when given with true value, the response will force a download os the file. Example: /file/b75b819f-3978-014e-291c-841bfa1d2bfe?download=true   |
+
+
+|  |  |
+|----------|----------|
+|   <b>Response</b>  |    |
+```json
+{
+    "created_at": "2024-08-19UTC09:19:37",
+    "updated_at": "2024-08-19UTC09:19:37",
+    "uid": "b75b819f-3978-014e-291c-841bfa1d2bfe",
+    "contentType": "image/png",
+    "name": "my small image",
+    "size": 16491,
+    "links": [
+        {
+            "type": "metadata",
+            "link": "/file/b75b819f-3978-014e-291c-841bfa1d2bfe"
+        },
+        {
+            "type": "download",
+            "link": "/file/b75b819f-3978-014e-291c-841bfa1d2bfe?download=true"
+        }
+    ],
+    "user": {
+        "created_at": "2024-08-19UTC09:14:00",
+        "updated_at": "2024-08-19UTC09:14:00",
+        "uid": "84f80a21-6aea-0e46-2041-f028cae765b1",
+        "username": "regular@admin-mega.com",
+        "is_active": true
+    }
+}
+```
