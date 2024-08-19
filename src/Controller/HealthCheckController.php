@@ -11,9 +11,6 @@ class HealthCheckController
 {
     public function index(Request $request): JsonResponse
     {
-        $response =  new JsonResponse();
-        $response->setData(['message' => 'Mega API is up and running!']);
-
-        return $response;
+        return new JsonResponse(['message' => 'Mega API is up and running!']);
     }
 }
