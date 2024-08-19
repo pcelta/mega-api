@@ -37,7 +37,7 @@ stop:
 .PHONY: reset
 reset:
 	@echo "Reseting containers..."
-	docker-compose stop && docker-compose rm -f
+	docker-compose stop && docker-compose rm -f && rm -rf .dev/db_data
 
 .PHONY: composer
 composer:
