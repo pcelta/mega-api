@@ -4,7 +4,6 @@ declare(strict_types = 1);
 
 namespace Mega\Controller;
 
-use finfo;
 use Lib\Http\DownloadableResponse;
 use Lib\Http\JsonResponse;
 use Lib\Http\Request;
@@ -26,17 +25,11 @@ class FileController extends AbstractController
             return $response;
         }
 
-        $fileSize = $_FILES['file']['size'];
-
-        $content = file_get_contents($_FILES['file']['tmp_name']);
-
-        $finfo = new finfo(FILEINFO_MIME_TYPE);
-        $mimeType = $finfo->buffer($content);
-
-        $fileName = $request->getParam('name');
+        $uploadedFile = $request->getUploadedFile();
+        $uploadedFile->setName($request->getParam('name'));
 
         try {
-            $fileData = $this->fileService->store($fileName, $content, $mimeType, $fileSize, $this->authenticatedUsed);
+            $fileData = $this->fileService->store($uploadedFile, $this->authenticatedUsed);
 
             $response = new JsonResponse(['message' => 'File uploaded!', 'file' => $fileData->toArray()]);
             $response->setStatusCode(Response::HTTP_STATUS_CREATED);

@@ -17,14 +17,24 @@ class FileService
 
     public function __construct(protected FileRepository $fileRepository) {}
 
-    public function store(string $fileName, string $fileContent, string $contentType, int $fileSize, User $owner): File
+    public function store(UploadedFile $uploadedFile, User $owner): File
     {
-        if ($fileSize > self::MAX_FILE_SIZE) {
-            throw new TooLargeFileException($fileSize, self::MAX_FILE_SIZE);
+        if ($uploadedFile->getFileSize() > self::MAX_FILE_SIZE) {
+            throw new TooLargeFileException($uploadedFile->getFileSize(), self::MAX_FILE_SIZE);
         }
 
         $uid = Uid::generate();
-        $file = new File(null, $uid, $owner, $fileName, $contentType, $fileContent, $fileSize, null, null);
+        $file = new File(
+            null,
+            $uid,
+            $owner,
+            $uploadedFile->getName(),
+            $uploadedFile->getContentType(),
+            $uploadedFile->getContent(),
+            $uploadedFile->getFileSize(),
+            null,
+            null
+        );
 
         $this->fileRepository->persist($file);
         $commitedFile = $this->fileRepository->findOneByUidAndUser($uid, $owner);
