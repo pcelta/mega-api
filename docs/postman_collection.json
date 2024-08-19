@@ -337,6 +337,45 @@
 					"response": []
 				},
 				{
+					"name": "Update",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer: {{access_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/Users/pcelta/workplace/mega-api/docs/04-setup.md"
+								},
+								{
+									"key": "name",
+									"value": "new name",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{host}}/file/7089716e-72f6-0abc-235b-3cc5407a04e6",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"file",
+								"7089716e-72f6-0abc-235b-3cc5407a04e6"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Fetch One (metadata)",
 					"request": {
 						"method": "GET",
