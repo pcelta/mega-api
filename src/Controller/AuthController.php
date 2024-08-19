@@ -25,7 +25,7 @@ class AuthController
 
         try {
             $user = $this->authService->authenticate($userIdentity);
-        } catch (AuthenticationException $e) {
+        } catch (AuthenticationException | EntityNotFoundException $e) {
             $response = new JsonResponse(['message' => 'Invalid Credentials']);
             $response->setStatusCode(Response::HTTP_STATUS_UNAUTHORIZED);
 

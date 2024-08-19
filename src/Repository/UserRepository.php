@@ -39,16 +39,18 @@ class UserRepository extends AbstractRepository
         if ($mustBeActive) {
             $sql .= 'AND is_active = 1';
         }
-        $stmt = $this->pdo->prepare('SELECT * FROM user WHERE username = :username');
+        $stmt = $this->pdo->prepare($sql);
         $stmt->bindParam(':username', $username);
         $stmt->execute();
 
         $row = $stmt->fetch();
+        if (!$row) {
+            throw new EntityNotFoundException(User::class);
+        }
 
         if ($cleanPassword) {
             $row['password'] = User::PASSWORD_CLEAN_STATE;
         }
-
 
         return $this->userBuilder->buildFromRow($row);
     }
@@ -62,14 +64,14 @@ class UserRepository extends AbstractRepository
         return $stmt->fetch() !== false;;
     }
 
-    public function findByToken(string $acessToken, string $type): User
+    public function findByToken(string $accessToken, string $type): User
     {
         $sql = 'SELECT u.* FROM user u ';
         $sql .= 'INNER JOIN user_access ua ON ua.fk_user=u.id ';
         $sql .= 'WHERE token = :token AND `type` = :type AND NOW() <= expires_at';
 
         $stmt = $this->pdo->prepare($sql);
-        $stmt->bindParam(':token', $acessToken);
+        $stmt->bindParam(':token', $accessToken);
         $stmt->bindParam(':type', $type);
         $stmt->execute();
 
