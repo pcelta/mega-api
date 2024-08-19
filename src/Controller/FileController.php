@@ -76,4 +76,16 @@ class FileController extends AbstractController
             return JsonResponse::createNotFound();
         }
     }
+
+    public function listAll(): JsonResponse
+    {
+        $files = $this->fileService->getAllByUser($this->authenticatedUsed);
+
+        $responseData = [];
+        foreach ($files as $file) {
+            $responseData[] = $file->toArray();
+        }
+
+        return new JsonResponse($responseData);
+    }
 }

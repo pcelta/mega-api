@@ -98,4 +98,12 @@ return [
         'action' => 'delete',
         'allowed' => [Role::ROLE_ADMIN, Role::ROLE_USER],
     ],
+    [
+        'route' => '/file',
+        'param' => ':uid:',
+        'method' => 'GET',
+        'controller' => FileController::class,
+        'action' => 'listAll',
+        'allowed' => [Role::ROLE_ADMIN, Role::ROLE_USER],
+    ],
 ];

@@ -307,6 +307,72 @@ In this case, the bearer token should contain the refresh token
 }
 ```
 
+## File | Fetch all
+|  |  |
+|----------|----------|
+|   <b>URI</b>  |   /file |
+|   <b>HTTP Method</b>  |   GET  |
+
+
+|  |  |
+|----------|----------|
+|   <b>Response</b>  |    |
+```json
+[
+    {
+        "created_at": "2024-08-19UTC10:02:31",
+        "updated_at": "2024-08-19UTC10:02:31",
+        "uid": "23f1d88a-7d93-0f76-12aa-307603d60cc5",
+        "contentType": "image/png",
+        "name": "my small image",
+        "size": 16491,
+        "links": [
+            {
+                "type": "metadata",
+                "link": "/file/23f1d88a-7d93-0f76-12aa-307603d60cc5"
+            },
+            {
+                "type": "download",
+                "link": "/file/23f1d88a-7d93-0f76-12aa-307603d60cc5?download=true"
+            }
+        ],
+        "user": {
+            "created_at": "2024-08-19UTC09:43:46",
+            "updated_at": "2024-08-19UTC09:43:46",
+            "uid": "d5090c43-1d46-0d89-2884-5c7b22db6418",
+            "username": "regular@admin-mega.com",
+            "is_active": true
+        }
+    },
+    {
+        "created_at": "2024-08-19UTC10:15:59",
+        "updated_at": "2024-08-19UTC10:15:59",
+        "uid": "7089716e-72f6-0abc-235b-3cc5407a04e6",
+        "contentType": "image/png",
+        "name": "my small image 2",
+        "size": 16491,
+        "links": [
+            {
+                "type": "metadata",
+                "link": "/file/7089716e-72f6-0abc-235b-3cc5407a04e6"
+            },
+            {
+                "type": "download",
+                "link": "/file/7089716e-72f6-0abc-235b-3cc5407a04e6?download=true"
+            }
+        ],
+        "user": {
+            "created_at": "2024-08-19UTC09:43:46",
+            "updated_at": "2024-08-19UTC09:43:46",
+            "uid": "d5090c43-1d46-0d89-2884-5c7b22db6418",
+            "username": "regular@admin-mega.com",
+            "is_active": true
+        }
+    }
+]
+```
+
+
 ## File | Delete One
 |  |  |
 |----------|----------|

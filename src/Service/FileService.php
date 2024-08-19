@@ -41,4 +41,9 @@ class FileService
         $file = $this->fileRepository->findOneByUidAndUser($uid, $user);
         $this->fileRepository->delete($file);
     }
+
+    public function getAllByUser(User $user): array
+    {
+        return $this->fileRepository->findAllByUser($user);
+    }
 }

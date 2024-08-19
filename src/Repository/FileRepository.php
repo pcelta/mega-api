@@ -13,7 +13,7 @@ use PDO;
 
 class FileRepository extends AbstractRepository
 {
-    public function __construct(protected PDO $pdo, protected FileBuilder $FileBuilder, protected UserBuilder $userBuilder) {}
+    public function __construct(protected PDO $pdo, protected FileBuilder $fileBuilder, protected UserBuilder $userBuilder) {}
 
     public function persist(File $file): void
     {
@@ -55,7 +55,7 @@ class FileRepository extends AbstractRepository
             throw new EntityNotFoundException(File::class);
         }
 
-        $file = $this->FileBuilder->buildFromRow($row);
+        $file = $this->fileBuilder->buildFromRow($row);
         $user = $this->userBuilder->buildFromRow($row, 'u__');
         $file->setUser($user);
 
@@ -74,5 +74,33 @@ class FileRepository extends AbstractRepository
         $stmt->bindParam(':uid', $uid);
         $stmt->bindParam(':user_id', $userId);
         $stmt->execute();
+    }
+
+    public function findAllByUser(User $user): array
+    {
+        $sql = 'SELECT ufd.*, u.id as u__id, u.uid as u__uid, u.username as u__username, u.created_at as u__created_at, u.is_active as u__is_active, u.updated_at as u__updated_at FROM user_file_data ufd ';
+        $sql .= 'INNER JOIN user u ON u.id=ufd.fk_user WHERE u.id = :user_id ';
+
+        $stmt = $this->pdo->prepare($sql);
+
+        $userId = $user->getId();
+
+        $stmt->bindParam(':user_id', $userId);
+        $stmt->execute();
+
+        $rows = $stmt->fetchAll();
+        if (empty($rows)) {
+            return [];
+        }
+
+        $files = [];
+        foreach ($rows as $row) {
+            $file = $this->fileBuilder->buildFromRow($row);
+            $user = $this->userBuilder->buildFromRow($row, 'u__');
+            $file->setUser($user);
+            $files[] = $file;
+        }
+
+        return $files;
     }
 }
