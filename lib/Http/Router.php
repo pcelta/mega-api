@@ -5,6 +5,10 @@ declare(strict_types = 1);
 namespace Lib\Http;
 
 use Lib\ServiceLocator;
+use Mega\Entity\Role;
+use Mega\Entity\UserAccess;
+use Mega\Exception\EntityNotFoundException;
+use Mega\Repository\UserRepository;
 use Mega\Service\AuthService;
 
 class Router
@@ -95,6 +99,13 @@ class Router
         }
 
         $controller = $this->serviceLocator->get($routeConfig['controller']);
+        try {
+            $userRepository = $this->serviceLocator->get(UserRepository::class);
+            $userToken = $this->request->getAuthorizationToken();
+            $authenticatedUser = $userRepository->findByToken($userToken, UserAccess::TYPE_ACCESS);
+            $controller->setAuthenticatedUser($authenticatedUser);
+        } catch (EntityNotFoundException $e) {}
+
         $response = $controller->{$routeConfig['action']}($this->request);
         $response->send();
     }
