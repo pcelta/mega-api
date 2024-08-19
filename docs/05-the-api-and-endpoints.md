@@ -22,12 +22,26 @@ There is a Postman collection import file avaialable in docs/postman_collection.
 When the authentication is done using the Postman Collection, the access and refresh token are stored as environment variables. So, all the following requests that require a bearer token will automatically be added.
 
 
+## Health Check
+|  |  |
+|----------|----------|
+|   <b>URI</b>  |   /health-check |
+|   <b>HTTP Method</b>  |   GET  |
+|   <b>Which roles have access?</b>  |   All including Anonymous. It means it is a public resource  |
+|   <b>Response</b>  |    |
+```json
+{
+    "message": "Mega API is up and running!"
+}
+```
+
 ## Authentication
 
 |  |  |
 |----------|----------|
 |   <b>URI</b>  |   /auth |
 |   <b>HTTP Method</b>  |   POST  |
+|   <b>Which roles have access?</b>  |   All  |
 |   <b>Request body</b>  |     |
 
 ```json
@@ -71,16 +85,18 @@ Once the access token gets expired, a request should be done to this endpoint to
 |----------|----------|
 |   <b>URI</b>  |   /auth/refresh-token |
 |   <b>HTTP Method</b>  |   POST  |
+|   <b>Which roles have access?</b>  |   All  |
 
 In this case, the bearer token should contain the refresh token
 
 <br/>
 
-## List on Role by slug
+## Role | Fetch one
 |  |  |
 |----------|----------|
 |   <b>URI</b>  |   /role/:role-slug |
 |   <b>HTTP Method</b>  |   POST  |
+|   <b>Which roles have access?</b>  |   Administrator  |
 |   <b>Request body</b>  |     |
 
 ```json
@@ -110,11 +126,12 @@ In this case, the bearer token should contain the refresh token
 ]
 ```
 
-## User | List all
+## User | Fetch all
 |  |  |
 |----------|----------|
 |   <b>URI</b>  |   /user |
 |   <b>HTTP Method</b>  |   GET  |
+|   <b>Which roles have access?</b>  |   Administrator  |
 |   <b>HTTP Response</b>  |     |
 
 ```json
@@ -143,11 +160,12 @@ In this case, the bearer token should contain the refresh token
 ]
 ```
 
-## User | List one by uid
+## User | Fetch one
 |  |  |
 |----------|----------|
 |   <b>URI</b>  |   /user/:uid: |
 |   <b>HTTP Method</b>  |   GET  |
+|   <b>Which roles have access?</b>  |   Administrator  |
 |   <b>HTTP Response</b>  |     |
 
 ```json
@@ -174,6 +192,7 @@ In this case, the bearer token should contain the refresh token
 |----------|----------|
 |   <b>URI</b>  |   /user/:uid: |
 |   <b>HTTP Method</b>  |   DELETE  |
+|   <b>Which roles have access?</b>  |   Administrator  |
 |   <b>HTTP Response</b>  |     |
 
 ```json
@@ -188,6 +207,7 @@ In this case, the bearer token should contain the refresh token
 |   <b>URI</b>  |   /user/:uid: |
 |   <b>HTTP Method</b>  |   PATCH  |
 |   <b>Limitation</b>  |   Does not update username  |
+|   <b>Which roles have access?</b>  |   Administrator  |
 |   <b>Request Body</b>  |     |
 
 ```json
@@ -228,6 +248,7 @@ In this case, the bearer token should contain the refresh token
 |----------|----------|
 |   <b>URI</b>  |   /file |
 |   <b>HTTP Method</b>  |   POST  |
+|   <b>Which roles have access?</b>  |   Administrator, User  |
 |   <b>Request Data type</b>  |   Multipart/Form-Data  |
 |   <b>Form</b>  |     |
 |   <b>form.file</b>  |  file to be uploaded   |
@@ -272,6 +293,7 @@ In this case, the bearer token should contain the refresh token
 |----------|----------|
 |   <b>URI</b>  |   /file/:uid: |
 |   <b>HTTP Method</b>  |   GET  |
+|   <b>Which roles have access?</b>  |   Administrator, User  |
 |   <b>Query String Parameters</b>  |     |
 |   <b>download</b>  |   when given with true value, the response will force a download os the file. Example: /file/b75b819f-3978-014e-291c-841bfa1d2bfe?download=true   |
 
@@ -312,6 +334,7 @@ In this case, the bearer token should contain the refresh token
 |----------|----------|
 |   <b>URI</b>  |   /file |
 |   <b>HTTP Method</b>  |   GET  |
+|   <b>Which roles have access?</b>  |   Administrator, User  |
 
 
 |  |  |
@@ -372,12 +395,12 @@ In this case, the bearer token should contain the refresh token
 ]
 ```
 
-
 ## File | Delete One
 |  |  |
 |----------|----------|
 |   <b>URI</b>  |   /file/:uid: |
 |   <b>HTTP Method</b>  |   DELETE  |
+|   <b>Which roles have access?</b>  |   Administrator, User  |
 
 
 |  |  |
