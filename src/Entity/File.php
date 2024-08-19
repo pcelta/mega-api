@@ -84,4 +84,32 @@ class File extends AbstractEntity
     {
         return $this->size;
     }
+
+    public function setName(string $name): self
+    {
+            $this->name = $name;
+
+            return $this;
+    }
+
+    public function setContentType(string $contentType): self
+    {
+            $this->contentType = $contentType;
+
+            return $this;
+    }
+
+    public function setData(string $data): self
+    {
+            $this->data = $data;
+
+            return $this;
+    }
+
+    public function setSize(int $size): self
+    {
+            $this->size = $size;
+
+            return $this;
+    }
 }

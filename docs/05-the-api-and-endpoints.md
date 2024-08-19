@@ -252,7 +252,53 @@ In this case, the bearer token should contain the refresh token
 |   <b>Request Data type</b>  |   Multipart/Form-Data  |
 |   <b>Form</b>  |     |
 |   <b>form.file</b>  |  file to be uploaded   |
-|   <b>form.name</b>  |  file desired name   |
+|   <b>form.name</b>  |  desired file name   |
+
+|  |  |
+|----------|----------|
+|   <b>Response</b>  |    |
+```json
+{
+    "message": "File uploaded!",
+    "file_data": {
+        "created_at": "2024-08-19UTC09:19:37",
+        "updated_at": "2024-08-19UTC09:19:37",
+        "uid": "b75b819f-3978-014e-291c-841bfa1d2bfe",
+        "name": "my small image",
+        "size": 16491,
+        "contentType": "image/png",
+            "links": [
+        {
+            "type": "metadata",
+            "link": "/file/b75b819f-3978-014e-291c-841bfa1d2bfe"
+        },
+        {
+            "type": "download",
+            "link": "/file/b75b819f-3978-014e-291c-841bfa1d2bfe?download=true"
+        }
+    ],
+        "user": {
+            "created_at": "2024-08-19UTC09:14:00",
+            "updated_at": "2024-08-19UTC09:14:00",
+            "uid": "84f80a21-6aea-0e46-2041-f028cae765b1",
+            "username": "regular@admin-mega.com",
+            "is_active": true
+        }
+    }
+}
+```
+
+## File | Update
+|  |  |
+|----------|----------|
+|   <b>URI</b>  |   /file/:uid: |
+|   <b>HTTP Method</b>  |   POST  |
+|   <b>Important</b>  | it should be a PUT but there was not enough time to develop a PUT parameter parser using form multipart/form-data |
+|   <b>Which roles have access?</b>  |   Administrator, User  |
+|   <b>Request Data type</b>  |   Multipart/Form-Data  |
+|   <b>Form</b>  |     |
+|   <b>form.file</b>  |  file to be uploaded   |
+|   <b>form.name</b>  |  desired file name   |
 
 |  |  |
 |----------|----------|

@@ -4,6 +4,8 @@ declare(strict_types = 1);
 
 namespace Lib\Http;
 
+use Lib\Http\UploadedFile;
+
 class Request
 {
     private string $body;
@@ -61,5 +63,10 @@ class Request
     public function getContentType(): string
     {
         return $this->server['HTTP_CONTENT_TYPE'] ?? '';
+    }
+
+    public function getUploadedFile(): UploadedFile
+    {
+        return new UploadedFile($_FILES);
     }
 }

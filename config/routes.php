@@ -100,10 +100,17 @@ return [
     ],
     [
         'route' => '/file',
-        'param' => ':uid:',
         'method' => 'GET',
         'controller' => FileController::class,
         'action' => 'listAll',
+        'allowed' => [Role::ROLE_ADMIN, Role::ROLE_USER],
+    ],
+    [
+        'route' => '/file/:uid:',
+        'param' => ':uid:',
+        'method' => 'POST', // it should be a PUT but there was not enough time to develop a PUT parameter parser using form multipart/form-data
+        'controller' => FileController::class,
+        'action' => 'update',
         'allowed' => [Role::ROLE_ADMIN, Role::ROLE_USER],
     ],
 ];

@@ -20,7 +20,7 @@ class FileController extends AbstractController
     public function upload(Request $request): JsonResponse
     {
         if (!isset($_FILES)) {
-            $response = new JsonResponse(['message' => 'No Files Sent!']);
+            $response = new JsonResponse(['message' => 'No File Sent!']);
             $response->setStatusCode(Response::HTTP_STATUS_UNPROCESSABLE_ENTITY);
 
             return $response;
@@ -87,5 +87,38 @@ class FileController extends AbstractController
         }
 
         return new JsonResponse($responseData);
+    }
+
+    public function update(Request $request): JsonResponse
+    {
+        try {
+            $file = $this->fileService->getOneByUidAndUser($request->getParam(':uid:'), $this->authenticatedUsed);
+        } catch (EntityNotFoundException $e) {
+            return JsonResponse::createNotFound();
+        }
+
+        if (!isset($_FILES)) {
+            $response = new JsonResponse(['message' => 'No File Sent!']);
+            $response->setStatusCode(Response::HTTP_STATUS_UNPROCESSABLE_ENTITY);
+
+            return $response;
+        }
+
+        $uploadedFile = $request->getUploadedFile();
+        $uploadedFile->setName($request->getParam('name'));
+
+        try {
+            $file = $this->fileService->update($file, $uploadedFile);
+
+            $response = new JsonResponse(['message' => 'File updated!', 'file' => $file->toArray()]);
+            $response->setStatusCode(Response::HTTP_STATUS_OK);
+
+            return $response;
+        } catch (TooLargeFileException $e) {
+            $response = new JsonResponse(['message' => $e->getMessage()]);
+            $response->setStatusCode(Response::HTTP_STATUS_UNPROCESSABLE_ENTITY);
+
+            return $response;
+        }
     }
 }

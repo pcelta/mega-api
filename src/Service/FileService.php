@@ -5,6 +5,7 @@ declare(strict_types = 1);
 namespace Mega\Service;
 
 use Lib\Uid;
+use Lib\Http\UploadedFile;
 use Mega\Entity\File;
 use Mega\Entity\User;
 use Mega\Exception\TooLargeFileException;
@@ -45,5 +46,17 @@ class FileService
     public function getAllByUser(User $user): array
     {
         return $this->fileRepository->findAllByUser($user);
+    }
+
+    public function update(File $file, UploadedFile $uploadedFile): File
+    {
+        $file->setName($uploadedFile->getName())
+            ->setContentType($uploadedFile->getContentType())
+            ->setSize($uploadedFile->getFileSize())
+            ->setData($uploadedFile->getContent());
+
+        $this->fileRepository->update($file);
+
+        return $file;
     }
 }
