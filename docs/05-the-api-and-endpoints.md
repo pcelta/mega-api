@@ -305,7 +305,7 @@ In this case, the bearer token should contain the refresh token
 |   <b>Response</b>  |    |
 ```json
 {
-    "message": "File uploaded!",
+    "message": "File updated!",
     "file_data": {
         "created_at": "2024-08-19UTC09:19:37",
         "updated_at": "2024-08-19UTC09:19:37",
@@ -342,6 +342,7 @@ In this case, the bearer token should contain the refresh token
 |   <b>Which roles have access?</b>  |   Administrator, User  |
 |   <b>Query String Parameters</b>  |     |
 |   <b>download</b>  |   when given with true value, the response will force a download os the file. Example: /file/b75b819f-3978-014e-291c-841bfa1d2bfe?download=true   |
+|   <b>raw</b>  |   when given with true value, the response will contain the raw file content. Example: /file/b75b819f-3978-014e-291c-841bfa1d2bfe?raw=true   |
 
 
 |  |  |

@@ -55,6 +55,13 @@ class FileController extends AbstractController
             return new DownloadableResponse($file);
         }
 
+        if ($request->getParam('raw', false)) {
+            $rawResponse = new Response();
+            $rawResponse->setContent($file->getData());
+
+            return $rawResponse;
+        }
+
         return new JsonResponse($file->toArray());
     }
 
